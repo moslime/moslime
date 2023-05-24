@@ -12,7 +12,7 @@ The code is still in "pre-alpha how is this even working" stage so expect things
 1. Turn on all the trackers and pair them to your computer. You can either do this using your distros bluetooth manager or `bluetoothctl` in a terminal
 2. Get the MAC addresses for all of your trackers. They should start with `3C:38:F4` (if you have a tracker that starts with something different let us know)
 3. Turn off all the trackers then disable and reenable bluetooth
-4. Download moslime.py and open it up in your favorite text editor. At the top, put the MAC addresses of your trackers in `tracker_addrs` and change `UDP_IP` to the IP address of the computer running SlimeVR.
+4. Download moslime.py and open it up in your favorite text editor. At the top, put the MAC addresses of your trackers in `tracker_addrs` and change `UDP_IP` to the IP address of the computer running SlimeVR. You can put as few or as many trackers as you like (performance might degrade after 6 trackers)
 5. Start the SlimeVR server and give it a few seconds to get fully loaded. If you want to use other trackers with slime, don't turn them on until after you have the mocopis connected.
 6. Run `python3 moslime.py` then immediately turn all the trackers back on. You can either do this manually or by plugging in the case, waiting for the trackers to light up then quickly unplugging it.
 7. You should see the trackers connecting in the terminal and they should go green. While this is happening, leave the trackers in the case on a table and don't touch them.
