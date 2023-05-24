@@ -24,6 +24,12 @@ The code is still in "pre-alpha how is this even working" stage so expect things
 ## Troubleshooting
  - If trackers are refusing to connect, try stopping the script (mash Ctrl+C till it stops), turn off all the trackers, restart bluetooth and do steps 6-8 again.
  - If you see `Safe to start tracking` but no trackers in SlimeVR, make sure you have the correct IP address and that both computers are on the same network.
+ - If your linux PC is a desktop and range/performance seems really bad, make sure you have your WiFi/BT antenna connected. Alternatively, you can also use an external bluetooth dongle but your mileage may vary. 
+
+## Tested Bluetooth adapters
+ - [SENA UD100](http://www.senanetworks.com/ud100-g03.html)
+ - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
+ - Raspberry Pi 3B+ onboard BT (The bluetooth chip can handle the connections but the pi itself struggles a bit)
 
 ## Rescources
- - https://github.com/lmore377/mocopi-reverse-engineering
+ - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
