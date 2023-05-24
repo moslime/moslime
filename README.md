@@ -24,3 +24,6 @@ The code is still in "pre-alpha how is this even working" stage so expect things
 ## Troubleshooting
  - If trackers are refusing to connect, try stopping the script (mash Ctrl+C till it stops), turn off all the trackers, restart bluetooth and do steps 6-8 again.
  - If you see `Safe to start tracking` but no trackers in SlimeVR, make sure you have the correct IP address and that both computers are on the same network.
+
+## Rescources
+ - https://github.com/lmore377/mocopi-reverse-engineering
