@@ -5,7 +5,7 @@ This project aims to improve upon the Mocopi trackers by getting rid of the depe
 The code is still in "pre-alpha how is this even working" stage so expect things to break. Everything is in python right now but there's plans to port over to rust once everything is stable.
 
 ## Disclaimer
-- Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are they affiliated with the developers. This third-party software is provided as is, without warranty. This software does not modify the firmware of your Mocopi trackers and should not break your trackers. However, only use this software if you agree to assume the risks therein.
+Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are they affiliated with the developers. This third-party software is provided as is, without warranty. This software does not modify the firmware of your Mocopi trackers and should not break your trackers. However, only use this software if you agree to assume the risks therein.
 
 ## Requirements
  - Any linux system with bluetooth and BlueZ as the bluetooth stack (this system can be seperate from the system running SlimeVR, you might even be able to use a VM)
@@ -35,8 +35,8 @@ The code is still in "pre-alpha how is this even working" stage so expect things
  - Raspberry Pi 3B onboard BT (The bluetooth chip can handle the connections but the pi itself struggles a bit)
 
 ## Contributors
- - lmore377 (Original Bluetooth reverse-engineering work, Python code, quaternion correction math)
- - PlatinumVsReality (Python Slime packet 17 code, Rust code, web interface, graphics, moral support)
+ - @lmore377 (Original Bluetooth reverse-engineering work, Python code, quaternion correction math)
+ - @PlatinumVsReality (Python Slime packet 17 code, Rust code, web interface, graphics, moral support)
 
 ## Resources
  - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
