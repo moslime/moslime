@@ -4,6 +4,9 @@ Make your questionable investment worth it by using Mocopi trackers with SlimeVR
 This project aims to improve upon the Mocopi trackers by getting rid of the dependence on the mobile app and making them function as SlimeVR trackers. As an added bonus, you can assign the trackers to any body part (ex: using the head tracker as a chest tracker and the wrist trackers as knee trackers)\
 The code is still in "pre-alpha how is this even working" stage so expect things to break. Everything is in python right now but there's plans to port over to rust once everything is stable.
 
+## Disclaimer
+- Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are they affiliated with the developers. This third-party software is provided as is, without warranty. This software does not modify the firmware of your Mocopi trackers and should not break your trackers. However, only use this software if you agree to assume the risks therein.
+
 ## Requirements
  - Any linux system with bluetooth and BlueZ as the bluetooth stack (this system can be seperate from the system running SlimeVR, you might even be able to use a VM)
  - Python 3 with bluepy and scipy `pip3 install bluepy scipy`
@@ -30,6 +33,10 @@ The code is still in "pre-alpha how is this even working" stage so expect things
  - [SENA UD100](http://www.senanetworks.com/ud100-g03.html)
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
  - Raspberry Pi 3B onboard BT (The bluetooth chip can handle the connections but the pi itself struggles a bit)
+
+## Contributors
+ - lmore377 (Original Bluetooth reverse-engineering work, Python code, quaternion correction math)
+ - PlatinumVsReality (Python Slime packet 17 code, Rust code, web interface, graphics, moral support)
 
 ## Resources
  - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
