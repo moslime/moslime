@@ -32,7 +32,7 @@ Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are th
 ## Tested Bluetooth adapters
  - [SENA UD100](http://www.senanetworks.com/ud100-g03.html)
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
- - Raspberry Pi 3B onboard BT (The bluetooth chip can handle the connections but the pi itself struggles a bit)
+ - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit)
 
 ## Contributors
  - @lmore377 (Original Bluetooth reverse-engineering work, Python code, quaternion correction math)
