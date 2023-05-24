@@ -31,5 +31,5 @@ The code is still in "pre-alpha how is this even working" stage so expect things
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
  - Raspberry Pi 3B onboard BT (The bluetooth chip can handle the connections but the pi itself struggles a bit)
 
-## Rescources
+## Resources
  - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
