@@ -16,10 +16,10 @@ Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are th
 2. Get the MAC addresses for all of your trackers. They should start with `3C:38:F4` (if you have a tracker that starts with something different let us know)
 3. Turn off all the trackers then disable and reenable bluetooth
 4. Download moslime.py and open it up in your favorite text editor. At the top, put the MAC addresses of your trackers in `tracker_addrs` and change `UDP_IP` to the IP address of the computer running SlimeVR. You can put as few or as many trackers as you like (performance might degrade after 6 trackers)
-5. Start the SlimeVR server and give it a few seconds to get fully loaded. If you want to use other trackers with slime, don't turn them on until after you have the mocopis connected.
+5. Start the SlimeVR server and give it a few seconds to get fully loaded. If you want to use other trackers with slime, don't turn them on until after you have moslime set up.
 6. Run `python3 moslime.py` then immediately turn all the trackers back on. You can either do this manually or by plugging in the case, waiting for the trackers to light up then quickly unplugging it.
-7. You should see the trackers connecting in the terminal and they should go green. While this is happening, leave the trackers in the case on a table and don't touch them.
-8. Once you see `Safe to start tracking` in the terminal, make sure all trackers appear in SlimeVR. If they do and they react to movement, you can now put them on and use the setup wizard built into SlimeVR to assign and calibrate them. At this point you can also turn on any additional SlimeVR trackers and use them alongside the mocopis.
+7. You should see the trackers connecting in the terminal and they should go green one by one. While this is happening, leave the trackers in the case on a flat, stable surface and don't touch them.
+8. Once you see `Safe to start tracking` in the terminal, make sure all trackers appear in SlimeVR. If they do and they react to movement, you can now put them on and use the setup wizard built into SlimeVR to assign and calibrate them. At this point you can also turn on any additional SlimeVR trackers and use them alongside the mocopis (make sure you always start moslime first. This won't be an issue in the future).
 
 ## Notes
  - If you somehow accidentally close SlimeVR, you'll need to do steps 6-8 again (make sure you turn the trackers off and restart bluetooth)
@@ -40,3 +40,5 @@ Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are th
 
 ## Resources
  - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
+ - https://github.com/SlimeVR/SlimeVR-Tracker-ESP - Used to figure out networking / packet structure
+ - https://github.com/carl-anders/slimevr-wrangler - Used to figure out networking / packet structure
