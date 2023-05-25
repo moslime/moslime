@@ -10,6 +10,7 @@ import threading
 tracker_addrs = ['3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx']
 UDP_IP = "192.168.1.191" # SlimeVR Server
 UDP_PORT = 6969 # SlimeVR Server
+TPS = 150 # SlimeVR packet frequency. Keep below 300 (above 300 has weird behavior)
 
 #no touch
 cmd_uuid = '0000ff00-0000-1000-8000-00805f9b34fb'
@@ -92,7 +93,7 @@ def add_imu(trackerID):
     packet_counter += 1
 
 def build_imu_packet(quant, pcounter, trackerID): # quant: Array containing the quanterion / pcounter: Packet number (should be fed by global counter) / trackerID: Tracker ID
-    mapping = {'packet_type': 17,'packet_id': 1,'sensor_id': 0,'data_type': 1,'quat': {'x': 0,'y': 0,'z': 0,'w': 0},'calibration_info': 0}    
+    mapping = {'packet_type': 17,'packet_id': 1,'sensor_id': 0,'data_type': 1,'quat': {'x': 0,'y': 0,'z': 0,'w': 0},'calibration_info': 0}
     mapping['quat']['x'] = -quant[0]
     mapping['quat']['y'] = -quant[1]
     mapping['quat']['z'] = quant[2]
@@ -114,18 +115,18 @@ def waitForNotif(num): # num: Tracker ID
 
 def sendAllIMUs(mac_addrs): # mac_addrs: Table of mac addresses. Just used to get number of trackers
   global sensorrcvd
-  for i in range(len(mac_addrs)):
-    while True:
-     for i in range(50): # This and the time.sleep are needed to limit the packet rate to 50 per second. Without it, the PPS goes up to 20k and it starts resending IMU data that has already been sent.
-      if all([True for x in sensorrcvd]):
-        for i in range(len(mac_addrs)):
-          global packet_counter
-          sensor = globals()['sensor'+ str(i) + 'data']  
-          imu = build_imu_packet([sensor['quat']['x'], sensor['quat']['y'], sensor['quat']['z'], sensor['quat']['w']], packet_counter, i)
-          sock.sendto(imu, (UDP_IP, UDP_PORT))
-          packet_counter += 1
-          tr1 = tr2 = tr3 = tr4 = tr5 = tr6 = 0
-      time.sleep(0.02)
+  global TPS
+  while True:
+   for z in range(TPS): # This and the time.sleep are needed to limit the packet rate. Without it, the PPS goes up to 20k and it starts resending IMU data that has already been sent.
+    if all([True for x in sensorrcvd]):
+      for i in range(len(mac_addrs)):
+        global packet_counter
+        sensor = globals()['sensor'+ str(i) + 'data']
+        imu = build_imu_packet([sensor['quat']['x'], sensor['quat']['y'], sensor['quat']['z'], sensor['quat']['w']], packet_counter, i)
+        sock.sendto(imu, (UDP_IP, UDP_PORT))
+        packet_counter += 1
+        sensorrcvd[i] = False
+    time.sleep(1 / TPS)
 
 def waitForNotif(num):
   while True:
@@ -141,7 +142,7 @@ class NotificationHandler(btle.DefaultDelegate):
         self.trakID = tID
    def handleNotification(self, cHandle, data):
     global quat_zero, allConnected
-    if allConnected: # Don't collect data until all trackers successfully connect 
+    if allConnected: # Don't collect data until all trackers successfully connect
      try:
        if self.ignorePackets == 0: # Once a number of packets have been discarded, we calculate the offset needed to make SlimeVR happy
          tmp_quant = [hexToQuat(data[8:10]), -hexToQuat(data[10:12]), -hexToQuat(data[12:14]), -hexToQuat(data[14:16])]
@@ -155,7 +156,7 @@ class NotificationHandler(btle.DefaultDelegate):
        quant_X = quant_corrected[1]
        quant_Y = -quant_corrected[3]
        quant_Z = quant_corrected[2]
-         
+
        globals()['sensor'+ str(self.trakID) + 'data'] = {'sensor_id': self.trakID,'quat': {'x': quant_X, 'y': quant_Y, 'z': quant_Z, 'w': quant_W}}
        globals()['sensorrcvd'][self.trakID] = True
      except Exception as e:
@@ -178,12 +179,12 @@ sock.sendto(handshake, (UDP_IP, UDP_PORT))
 print("Handshake")
 time.sleep(.1)
 
-# Add additional IMUs. SlimeVR only supports one "real" tracker per IP so the workaround is to make all the 
+# Add additional IMUs. SlimeVR only supports one "real" tracker per IP so the workaround is to make all the
 # trackers appear as extensions of the first tracker.
 for i in range(len(tracker_addrs)):
   add_imu(i)
 
-for i in range(len(tracker_addrs)): # Start notification threads 
+for i in range(len(tracker_addrs)): # Start notification threads
   globals()['s'+ str(i) + 'thread'] = threading.Thread(target=waitForNotif, args=(i,))
   globals()['s'+ str(i) + 'thread'].start()
 
