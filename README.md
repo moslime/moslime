@@ -35,8 +35,9 @@ Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are th
  - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit, it may be a good idea to lower the TPS in moslime.py)
 
 ## Contributors
- - @lmore377 (Original Bluetooth reverse-engineering work, Python code, quaternion correction math)
- - @PlatinumVsReality (Python Slime packet 17 code, Rust code, web interface, graphics, moral support)
+ - [@lmore377](https://github.com/lmore377) - Original Bluetooth reverse-engineering work, Python code, quaternion correction math
+ - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Python Slime packet 17 code, Rust code, web interface, graphics, moral support
+ - [@itstait](https://github.com/itstait) - Helped optimize multithreading (trust me it used to be much worse)
 
 ## Resources
  - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
