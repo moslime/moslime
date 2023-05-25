@@ -1,5 +1,5 @@
 # moslime
-Make your questionable investment worth it by using Mocopi trackers with SlimeVR
+Make your questionable investment worth it by using Mocopi trackers with SlimeVR!
 
 This project aims to improve upon the Mocopi trackers by getting rid of the dependence on the mobile app and making them function as SlimeVR trackers. As an added bonus, you can assign the trackers to any body part (ex: using the head tracker as a chest tracker and the wrist trackers as knee trackers)\
 The code is still in "pre-alpha how is this even working" stage so expect things to break. Everything is in python right now but there's plans to port over to rust once everything is stable.
@@ -32,7 +32,7 @@ Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are th
 ## Tested Bluetooth adapters
  - [SENA UD100](http://www.senanetworks.com/ud100-g03.html)
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
- - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit)
+ - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit, it may be a good idea to lower the TPS in moslime.py)
 
 ## Contributors
  - @lmore377 (Original Bluetooth reverse-engineering work, Python code, quaternion correction math)
