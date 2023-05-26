@@ -1,4 +1,4 @@
-# moslime
+![moslime](moslime_logo.png)
 Make your questionable investment worth it by using Mocopi trackers with SlimeVR!
 
 This project aims to improve upon the Mocopi trackers by getting rid of the dependence on the mobile app and making them function as SlimeVR trackers. As an added bonus, you can assign the trackers to any body part (ex: using the head tracker as a chest tracker and the wrist trackers as knee trackers)\
