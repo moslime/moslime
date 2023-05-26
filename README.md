@@ -5,7 +5,7 @@ Built on the battle-tested algorithms and runtime of SlimeVR™, this project ai
 
 ## Disclaimers
 This third-party software is deemed alpha quality, provided as is, and without warranty.
-Mocopi™ is a trademark owned by the Sony Corporation®. MoSlime is not endorsed by the Sony Corporation nor SlimeVR™, nor are they affiliated with the MoSlime developers.
+Mocopi™ is a trademark owned by the Sony Corporation®. MoSlime is not endorsed by the Sony Corporation® nor SlimeVR™, nor are they affiliated with the MoSlime developers.
 This software does not modify the firmware of your Mocopi™ trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Requirements
