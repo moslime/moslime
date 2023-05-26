@@ -1,45 +1,48 @@
 ![moslime](moslime_logo.png)
-Make your questionable investment worth it by using Mocopi trackers with SlimeVR!
+Bring your Mocopi™ trackers into Steam VR!
 
-This project aims to improve upon the Mocopi trackers by getting rid of the dependence on the mobile app and making them function as SlimeVR trackers. As an added bonus, you can assign the trackers to any body part (ex: using the head tracker as a chest tracker and the wrist trackers as knee trackers)\
-The code is still in "pre-alpha how is this even working" stage so expect things to break. Everything is in python right now but there's plans to port over to rust once everything is stable.
+Built on the battle tested algorithms and runtime of SlimeVR, this project aims to extend to improve and extend the Mocopi™ on PC experience.
 
-## Disclaimer
-Mocopi is a trademark owned by Sony. Moslime is not endorsed by Sony, nor are they affiliated with the developers. This third-party software is provided as is, without warranty. This software does not modify the firmware of your Mocopi trackers and should not break your trackers. However, only use this software if you agree to assume the risks therein.
+## Disclaimers
+This third-party software is deemed alpha quality, provided as is and without warranty.
+Mocopi is a trademark owned by the Sony Corporation. Moslime is not endorsed by the Sony Corporation nor SlimeVR, nor are they affiliated with the Moslime developers.
+This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Requirements
- - Any linux system with bluetooth and BlueZ as the bluetooth stack (this system can be seperate from the system running SlimeVR, you might even be able to use a VM)
- - Python 3 with bluepy and scipy `pip3 install bluepy scipy`
+ - Any VM or bare-metal Linux system with Bluetooth™ and BlueZ as the Bluetooth™ stack. This system can be seperate from the system that is running SlimeVR.
+ - Python 3 with bluepy and scipy installed `pip3 install bluepy scipy`
 
-## Usage - Read through the whole thing before following along
-1. Turn on all the trackers and pair them to your computer. You can either do this using your distros bluetooth manager or `bluetoothctl` in a terminal
-2. Get the MAC addresses for all of your trackers. They should start with `3C:38:F4` (if you have a tracker that starts with something different let us know)
-3. Turn off all the trackers then disable and reenable bluetooth
-4. Download moslime.py and open it up in your favorite text editor. At the top, put the MAC addresses of your trackers in `tracker_addrs` and change `UDP_IP` to the IP address of the computer running SlimeVR. You can put as few or as many trackers as you like (performance might degrade after 6 trackers)
-5. Start the SlimeVR server and give it a few seconds to get fully loaded. If you want to use other trackers with slime, don't turn them on until after you have moslime set up.
-6. Run `python3 moslime.py` then immediately turn all the trackers back on. You can either do this manually or by plugging in the case, waiting for the trackers to light up then quickly unplugging it.
-7. You should see the trackers connecting in the terminal and they should go green one by one. While this is happening, leave the trackers in the case on a flat, stable surface and don't touch them.
-8. Once you see `Safe to start tracking` in the terminal, make sure all trackers appear in SlimeVR. If they do and they react to movement, you can now put them on and use the setup wizard built into SlimeVR to assign and calibrate them. At this point you can also turn on any additional SlimeVR trackers and use them alongside the mocopis (make sure you always start moslime first. This won't be an issue in the future).
+## Usage - Please read the steps in their entirety as the process is currently time sensitive!
+1. Turn on all of the trackers and pair them to your computer. You can either do this by using your distros Bluetooth™ manager or via `bluetoothctl`.
+2. Take note of the MAC addresses for all of your trackers. They should start with `3C:38:F4`. If you have a tracker that starts with something different, please let us know!
+3. Turn off all of the trackers, then disable and re-enable Bluetooth™.
+4. Download moslime.py and open it in your favorite text editor. At the top, put the MAC addresses of your trackers in `tracker_addrs` and change `UDP_IP` to the IP address of the computer running SlimeVR. You can put as few or as many trackers as you like. However, performance might degrade after 6 trackers.
+5. Start the SlimeVR server and wait a few seconds for it to fully loaded. If you want to use other trackers with SlimeVR, don't turn them on until after you have MoSlime set up. Note: Any Mocopi™ tracker can be used on any body part. The plastic cover is purely cosmetic!
+6. Run `python3 moslime.py`, then immediately turn all the trackers back on. You can either do this manually or by plugging in the case, waiting for the trackers to light up then quickly unplugging it.
+7. You should see the lights on the trackers illuminate green one by one as they connect in the terminal. While they are connecting, leave the trackers in the case on a flat and stable surface. DO NOT touch them!
+8. Once you see `Safe to start tracking` in the terminal, make sure all trackers appear in SlimeVR. They should show up as IMU Tracker 1, IMU Tracker 2, etc.
+9. Shake each Mocopi™ individually and note which IMU Tracker slot glows in SlimeVR. This is your tracker designation until you assign it a body part and/or different name.
+10. [Optional]: At this point you can also turn on any additional SlimeVR trackers and use them alongside the Mocopi™s. Make sure you always start Moslime first. This will be an issue fixed in the future.
 
-## Notes
- - If you somehow accidentally close SlimeVR, you'll need to do steps 6-8 again (make sure you turn the trackers off and restart bluetooth)
+## Note
+If you somehow accidentally close SlimeVR, you'll need to do steps 6-8 again (make sure you turn the trackers off and restart bluetooth)
 
 ## Troubleshooting
  - If trackers are refusing to connect, try stopping the script (mash Ctrl+C till it stops), turn off all the trackers, restart bluetooth and do steps 6-8 again.
  - If you see `Safe to start tracking` but no trackers in SlimeVR, make sure you have the correct IP address and that both computers are on the same network.
- - If your linux PC is a desktop and range/performance seems really bad, make sure you have your WiFi/BT antenna connected. Alternatively, you can also use an external bluetooth dongle but your mileage may vary. 
+ - If your Linux PC is a desktop and range/performance seems really bad, make sure you have your WiFi/BT antenna connected. Alternatively, you can also use an external bluetooth dongle but your mileage may vary. 
 
-## Tested Bluetooth adapters
+## Tested Bluetooth™ adapters
  - [SENA UD100](http://www.senanetworks.com/ud100-g03.html)
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
  - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit, it may be a good idea to lower the TPS in moslime.py)
 
 ## Contributors
- - [@lmore377](https://github.com/lmore377) - Original Bluetooth reverse-engineering work, Python code, quaternion correction math
- - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Python Slime packet 17 code, Rust code, web interface, graphics, moral support
- - [@itstait](https://github.com/itstait) - Helped optimize multithreading (trust me it used to be much worse)
+[@lmore377](https://github.com/lmore377) - Original Bluetooth reverse-engineering work, Python code, quaternion correction math
+[@PlatinumVsReality](https://github.com/PlatinumVsReality) - Python Slime packet 17 code, Rust code, web interface, graphics, moral support
+[@itstait](https://github.com/itstait) - Helped optimize multithreading (trust me it used to be much worse)
 
 ## Resources
- - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
- - https://github.com/SlimeVR/SlimeVR-Tracker-ESP - Used to figure out networking / packet structure
- - https://github.com/carl-anders/slimevr-wrangler - Used to figure out networking / packet structure
+https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
+https://github.com/SlimeVR/SlimeVR-Tracker-ESP - Used to figure out networking / packet structure
+https://github.com/carl-anders/slimevr-wrangler - Used to figure out networking / packet structure
