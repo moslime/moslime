@@ -47,3 +47,4 @@ If you somehow accidentally close SlimeVR™, you'll need to do steps 6-8 again 
  - https://github.com/SlimeVR/SlimeVR-Tracker-ESP - Used to figure out networking / packet structure
  - https://github.com/carl-anders/slimevr-wrangler - Used to figure out networking / packet structure
  - https://www.creativefabrica.com/product/coffeecake/ - Cute font used for the logo. Special thanks to Khurasan!
+ - https://www.dafont.com/dripping.font - Additional font used, Dripping by Woodcutter
