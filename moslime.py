@@ -1,198 +1,211 @@
 #!/usr/bin/python3
+import json
+from collections import namedtuple
+
 from bluepy import btle
 from scipy.interpolate import interp1d
 import socket
 import time
 import struct
 import threading
+import numpy as np
 
-# This is all you need to set. You can put as few or as many trackers as you want (performance might suffer a bit with more than 6 trackers)
-tracker_addrs = ['3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx', '3C:38:F4:xx:xx:xx']
-UDP_IP = "192.168.1.191" # SlimeVR Server
-UDP_PORT = 6969 # SlimeVR Server
-TPS = 150 # SlimeVR packet frequency. Keep below 300 (above 300 has weird behavior)
+CONFIG = json.load(open('moslime.json'))
+TRACKER_ADDRESSES = CONFIG['addresses']
+SLIME_IP = CONFIG['slime_ip']  # SlimeVR Server
+SLIME_PORT = CONFIG['slime_port']  # SlimeVR Server
+TPS = CONFIG['tps']  # SlimeVR packet frequency. Keep below 300 (above 300 has weird behavior)
 
-#no touch
-cmd_uuid = '0000ff00-0000-1000-8000-00805f9b34fb'
-m = interp1d([-8192,8192],[-1,1])
-sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
-quat_zero = [1,0,0,0]
-packet_counter = 0
-allConnected = False
-sensorrcvd = []
-for i in range(len(tracker_addrs)):
-  globals()['sensor'+ str(i) + 'data'] = {'sensor_id': 0,'quat': {'x': 0,'y': 0,'z': 0,'w': 0}} # Create tracker data containers
-  globals()['sensorrcvd'].append(False) # Create "tracker received" flags
 
-def multiply(q1, q2):
-    w1, x1, y1, z1 = q1
-    w2, x2, y2, z2 = q2
+def build_handshake():
+    buffer = b'\x00\x00\x00\x03'  # packet 3 header
+    buffer += struct.pack('>Q', PACKET_COUNTER)
+    buffer += struct.pack('>LLLLLLL', 0, 0, 0, 0, 0, 0, 0)
+    buffer += struct.pack('B', len("MoSlime"))
+    buffer += struct.pack(str(len("MoSlime")) + 's', "MoSlime".encode('UTF-8'))
+    buffer += struct.pack('6s', '111111'.encode('UTF-8'))
+    buffer += struct.pack('B', 255)
+    return buffer
+
+
+def add_imu(trackerID):
+    global PACKET_COUNTER
+    buffer = b'\x00\x00\x00\x0f'  # packet 15 header
+    buffer += struct.pack('>Q', PACKET_COUNTER)
+    buffer += struct.pack('B', trackerID)
+    buffer += struct.pack('B', 3)
+    buffer += struct.pack('B', 5)
+    buffer += struct.pack('B', 255)
+    sock.sendto(buffer, (SLIME_IP, SLIME_PORT))
+    print("Add IMU: " + str(trackerID))
+    PACKET_COUNTER += 1
+
+
+def build_rotation_packet(qw: float, qx: float, qy: float, qz: float, tracker_id: int):
+    # quant: Array containing the quanterion / trackerID: Tracker ID
+    buffer = b'\x00\x00\x00\x11'  # packet 17 header
+    buffer += struct.pack('>Q', PACKET_COUNTER)
+    buffer += struct.pack('B', tracker_id)
+    buffer += struct.pack('B', 1)
+    buffer += struct.pack('>ffff', -qx, qz, qy, qw)  # expect x,z,y,w
+    buffer += struct.pack('B', 0)
+    return buffer
+
+
+def build_accel_packet(ax, ay, az, trackerID):
+    buffer = b'\x00\x00\x00\x04'  # packet 4 header
+    buffer += struct.pack('>Q', PACKET_COUNTER)
+    buffer += struct.pack('>fff', ax, ay, az)
+    buffer += struct.pack('B', trackerID)
+    return buffer
+
+
+def sendCommand(tId, cmd):  # id: Tracker ID / cmd: Command to send
+    if cmd == "start":  # Start tracker data stream
+        globals()['cmd_ch_t' + str(tId)].write(bytearray(b'\x7e\x03\x18\xd6\x01\x00\x00'), True)
+    else:
+        print("Invalid command")
+
+
+interp = interp1d([-8192, 8192], [-1, 1])
+
+
+def hexToQuat(bytes):
+    return interp(int.from_bytes(bytes, byteorder='little', signed=True))
+
+
+def hexToFloat(bytes):
+    return np.frombuffer(bytes, dtype=np.float16)
+
+
+def waitForNotif(num):
+    while True:
+        globals()['t' + str(num)].waitForNotifications(0)
+
+
+def multiply(w1, x1, y1, z1, w2, x2, y2, z2):
     w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
     x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
     y = w1 * y2 + y1 * w2 + z1 * x2 - x1 * z2
     z = w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2
     return w, x, y, z
 
-def hexToQuat(bytes):
-    return m(int.from_bytes(bytes, byteorder='little', signed=True))
 
-def connectTracker(mac_addr, tId): # mac_addr: Tracker MAC address / id: Tracker ID to send to slime (should be 0 for first tracker, anything for additional trackers)
-  while True:
-   try:
-    print("Connecting to MAC: " + str(mac_addr) + " ID: " + str(tId))
-    globals()['t'+ str(tId)] = btle.Peripheral(mac_addr)
-    globals()['t'+ str(tId)].setDelegate(NotificationHandler(tId))
-    globals()['cmd_t'+ str(tId)] =  globals()['t'+ str(tId)].getServiceByUUID(cmd_uuid)
-    globals()['cmd_ch_t'+ str(tId)] =  globals()['cmd_t'+ str(tId)].getCharacteristics()[1]
-    time.sleep(.5)
-   except Exception as e:
-    print("Tracker " + str(tId) + " EX: " + str(e))
-    time.sleep(3)
-    continue
-   break
+PACKET_COUNTER = 0
+CMD_UUID = '0000ff00-0000-1000-8000-00805f9b34fb'
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+ZERO_QUAT = [1, 0, 0, 0]
+ALL_CONNECTED = False
+MocopiPacket = namedtuple('MocopiPacket', 'sensor_id, qw, qx, qy, qz, ax, ay, az')
+for i in range(len(TRACKER_ADDRESSES)):
+    globals()['sensor' + str(i) + 'data'] = MocopiPacket(0, 0, 0, 0, 0, 0, 0, 0)  # Create tracker data containers
 
-def sendCommand(tId, cmd): # id: Tracker ID / cmd: Command to send
-  if cmd == "start": # Start tracker data stream
-    globals()['cmd_ch_t'+ str(tId)].write(bytearray([0x7e, 0x03, 0x18, 0xd6, 0x01, 0x00, 0x00]), True)
-  else:
-    print("Invalid command")
 
-def build_handshake(pcounter): # pcounter: Packet number (should be fed by global counter)
-    mapping = {'packet_type': 3,'packet_id': 0,'board': 2,'imu': 3,'mcu' : 4,'imu_info' : [5,6,7],'build' : 8,'firm': "test",'mac' : "111111"}
-    mapping['packet_id'] = pcounter
-    buffer = b''
-    buffer += struct.pack('>L', mapping['packet_type'])
-    buffer += struct.pack('>Q', mapping['packet_id'])
-    buffer += struct.pack('>L', mapping['board'])
-    buffer += struct.pack('>L', mapping['imu'])
-    buffer += struct.pack('>L', mapping['mcu'])
-    buffer += struct.pack('>L', mapping['imu_info'][0])
-    buffer += struct.pack('>L', mapping['imu_info'][1])
-    buffer += struct.pack('>L', mapping['imu_info'][2])
-    buffer += struct.pack('>L', mapping['build'])
-    buffer += struct.pack('B', len(mapping['firm']))
-    buffer += struct.pack(str(len(mapping['firm'])) + 's', mapping['firm'].encode('UTF-8'))
-    buffer += struct.pack('6s', mapping['mac'].encode('UTF-8'))
-    buffer += struct.pack('B', 255)
-    return buffer
+def sendAllIMUs(mac_addrs):  # mac_addrs: Table of mac addresses. Just used to get number of trackers
+    global TPS, PACKET_COUNTER
+    while True:
+        for z in range(TPS):
+            for i in range(len(mac_addrs)):
+                sensor = globals()['sensor' + str(i) + 'data']
+                rot = build_rotation_packet(sensor.qw, sensor.qx, sensor.qy, sensor.qz, i)
+                sock.sendto(rot, (SLIME_IP, SLIME_PORT))
+                PACKET_COUNTER += 1
+                accel = build_accel_packet(sensor.ax, sensor.ay, sensor.az, i)
+                sock.sendto(accel, (SLIME_IP, SLIME_PORT))
+                PACKET_COUNTER += 1
+            time.sleep(1 / TPS)
 
-def add_imu(trackerID):
-    global packet_counter
-    mapping = {'packet_type': 15,'packet_id': 1, 'sensor_id': 64, 'sensor_status': 3, 'sensor_type' : 5}
-    mapping['sensor_id'] = trackerID
-    mapping['packet_id'] = packet_counter
-    buffer = b''
-    buffer += struct.pack('>L', mapping['packet_type'])
-    buffer += struct.pack('>Q', mapping['packet_id'])
-    buffer += struct.pack('B', mapping['sensor_id'])
-    buffer += struct.pack('B', mapping['sensor_status'])
-    buffer += struct.pack('B', mapping['sensor_type'])
-    buffer += struct.pack('B', 255)
-    sock.sendto(buffer, (UDP_IP, UDP_PORT))
-    print("Add IMU: " + str(trackerID))
-    packet_counter += 1
 
-def build_imu_packet(quant, pcounter, trackerID): # quant: Array containing the quanterion / pcounter: Packet number (should be fed by global counter) / trackerID: Tracker ID
-    mapping = {'packet_type': 17,'packet_id': 1,'sensor_id': 0,'data_type': 1,'quat': {'x': 0,'y': 0,'z': 0,'w': 0},'calibration_info': 0}
-    mapping['quat']['x'] = -quant[0]
-    mapping['quat']['y'] = -quant[1]
-    mapping['quat']['z'] = quant[2]
-    mapping['quat']['w'] = quant[3]
-    mapping['packet_id'] = pcounter
-    mapping['sensor_id'] = trackerID
-    buffer = b''
-    buffer += struct.pack('>L', mapping['packet_type'])
-    buffer += struct.pack('>Q', mapping['packet_id'])
-    buffer += struct.pack('B', mapping['sensor_id'])
-    buffer += struct.pack('B', mapping['data_type'])
-    buffer += struct.pack('>ffff', *mapping['quat'].values())
-    buffer += struct.pack('B', mapping['calibration_info'])
-    return buffer
+def connectTracker(mac_addr, tId):
+    # mac_addr: Tracker MAC address / id: Tracker ID to send to slime (should be 0 for first tracker, anything for additional trackers)
+    while True:
+        try:
+            print("Connecting to MAC: " + str(mac_addr) + " ID: " + str(tId))
+            globals()['t' + str(tId)] = btle.Peripheral(mac_addr)
+            globals()['t' + str(tId)].setDelegate(NotificationHandler(tId))
+            globals()['t' + str(tId)].setMTU(40)
+            globals()['cmd_t' + str(tId)] = globals()['t' + str(tId)].getServiceByUUID(CMD_UUID)
+            globals()['cmd_ch_t' + str(tId)] = globals()['cmd_t' + str(tId)].getCharacteristics()[1]
+            time.sleep(.5)
+        except Exception as e:
+            print("Tracker " + str(tId) + " EX: " + str(e))
+            time.sleep(3)
+            continue
+        break
 
-def waitForNotif(num): # num: Tracker ID
-  while True:
-   globals()['t'+ str(num)].waitForNotifications(0)
 
-def sendAllIMUs(mac_addrs): # mac_addrs: Table of mac addresses. Just used to get number of trackers
-  global sensorrcvd
-  global TPS
-  while True:
-   for z in range(TPS): # This and the time.sleep are needed to limit the packet rate. Without it, the PPS goes up to 20k and it starts resending IMU data that has already been sent.
-    if all([True for x in sensorrcvd]):
-      for i in range(len(mac_addrs)):
-        global packet_counter
-        sensor = globals()['sensor'+ str(i) + 'data']
-        imu = build_imu_packet([sensor['quat']['x'], sensor['quat']['y'], sensor['quat']['z'], sensor['quat']['w']], packet_counter, i)
-        sock.sendto(imu, (UDP_IP, UDP_PORT))
-        packet_counter += 1
-        sensorrcvd[i] = False
-    time.sleep(1 / TPS)
+def correct(aX, aY, aZ):
+    SEN4G = 8192.0
+    ASC4G = ((32768.0 / SEN4G) / 32768.0) * 9.80665
+    aX2 = aX * ASC4G
+    aY2 = aY * ASC4G
+    aZ2 = aZ * ASC4G
+    return aX2, aY2, aZ2
 
-def waitForNotif(num):
-  while True:
-   globals()['t'+ str(num)].waitForNotifications(0)
 
 class NotificationHandler(btle.DefaultDelegate):
-   trakID = 0
-   ignorePackets = -10 # When Mocopi trackers start they sometimes send a few packets that aren't IMU data so we just discard the first 10 to be safe
-   offset = [0,0,0,0]
-   def __init__(self, tID):
+    trakID = 0
+    ignorePackets = -10
+    # When Mocopi trackers start they sometimes send a few packets that aren't IMU data so we just discard the first
+    # 10 to be safe
+    offset = (0, 0, 0, 0)
+
+    def __init__(self, tID):
         btle.DefaultDelegate.__init__(self)
         print("Connected to tracker ID " + str(tID))
         self.trakID = tID
-   def handleNotification(self, cHandle, data):
-    global quat_zero, allConnected
-    if allConnected: # Don't collect data until all trackers successfully connect
-     try:
-       if self.ignorePackets == 0: # Once a number of packets have been discarded, we calculate the offset needed to make SlimeVR happy
-         tmp_quant = [hexToQuat(data[8:10]), -hexToQuat(data[10:12]), -hexToQuat(data[12:14]), -hexToQuat(data[14:16])]
-         self.offset = multiply(tmp_quant, quat_zero)
-         self.ignorePackets += 1
-       elif self.ignorePackets < 0:
-         self.ignorePackets += 1
 
-       quant_corrected = multiply([hexToQuat(data[8:10]), hexToQuat(data[10:12]), hexToQuat(data[12:14]), hexToQuat(data[14:16])], self.offset)
-       quant_W = quant_corrected[0]
-       quant_X = quant_corrected[1]
-       quant_Y = -quant_corrected[3]
-       quant_Z = quant_corrected[2]
+    def handleNotification(self, _, data):
+        global ZERO_QUAT, ALL_CONNECTED
+        if ALL_CONNECTED:  # Don't collect data until all trackers successfully connect
+            try:
+                pw = hexToQuat(data[8:10])
+                px = hexToQuat(data[10:12])
+                py = hexToQuat(data[12:14])
+                pz = hexToQuat(data[14:16])
+                ax = hexToFloat(data[24:26])
+                ay = hexToFloat(data[26:28])
+                az = hexToFloat(data[28:30])
+                if self.ignorePackets == 0:
+                    # Once a number of packets have been discarded, we calculate the offset needed to make SlimeVR happy
+                    self.offset = multiply(pw, -px, -py, -pz, 1, 0, 0, 0)
+                    self.ignorePackets += 1
+                    return
+                elif self.ignorePackets < 0:
+                    self.ignorePackets += 1
+                qwc, qxc, qyc, qzc = multiply(pw, px, py, pz, *self.offset)
+                az, ay, az = correct(ax, ay, az)
+                globals()['sensor' + str(self.trakID) + 'data'] = MocopiPacket(self.trakID, qwc, qxc, qyc, qzc, ax, ay,
+                                                                               az)
+            except Exception as e:
+                print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
 
-       globals()['sensor'+ str(self.trakID) + 'data'] = {'sensor_id': self.trakID,'quat': {'x': quant_X, 'y': quant_Y, 'z': quant_Z, 'w': quant_W}}
-       globals()['sensorrcvd'][self.trakID] = True
-     except Exception as e:
-        print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
 
-print("Connecting to " + str(len(tracker_addrs)) + " trackers.")
-
+print("Connecting to " + str(len(TRACKER_ADDRESSES)) + " trackers.")
 # Connect all trackers then send start command
-for i in range(len(tracker_addrs)):
-  connectTracker(tracker_addrs[i], i)
-for i in range(len(tracker_addrs)):
-  sendCommand(i, "start")
-
-time.sleep(3) # Give trackers a few seconds to stabilize
-
-#Send the initial handshake to SlimeVR
-handshake = build_handshake(packet_counter)
-packet_counter += 1
-sock.sendto(handshake, (UDP_IP, UDP_PORT))
+for i in range(len(TRACKER_ADDRESSES)):
+    connectTracker(TRACKER_ADDRESSES[i], i)
+for i in range(len(TRACKER_ADDRESSES)):
+    sendCommand(i, "start")
+time.sleep(3)  # Give trackers a few seconds to stabilize
+# Send the initial handshake to SlimeVR
+handshake = build_handshake()
+PACKET_COUNTER += 1
+sock.sendto(handshake, (SLIME_IP, SLIME_PORT))
 print("Handshake")
 time.sleep(.1)
 
 # Add additional IMUs. SlimeVR only supports one "real" tracker per IP so the workaround is to make all the
 # trackers appear as extensions of the first tracker.
-for i in range(len(tracker_addrs)):
-  add_imu(i)
-
-for i in range(len(tracker_addrs)): # Start notification threads
-  globals()['s'+ str(i) + 'thread'] = threading.Thread(target=waitForNotif, args=(i,))
-  globals()['s'+ str(i) + 'thread'].start()
-
+for i in range(len(TRACKER_ADDRESSES)):
+    add_imu(i)
+for i in range(len(TRACKER_ADDRESSES)):  # Start notification threads
+    globals()['s' + str(i) + 'thread'] = threading.Thread(target=waitForNotif, args=(i,))
+    globals()['s' + str(i) + 'thread'].start()
 time.sleep(.5)
-allConnected = True
-
+ALL_CONNECTED = True
 print("Safe to start tracking")
-
 while True:
-  sendAllIMUs(tracker_addrs)
-  continue
+    sendAllIMUs(TRACKER_ADDRESSES)
+    continue
+
