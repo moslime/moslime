@@ -1,0 +1,6 @@
+{
+  "addresses": ["3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX"],
+  "slime_ip": "127.0.0.1",
+  "slime_port": 6969,
+  "tps": 150
+}
