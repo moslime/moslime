@@ -110,9 +110,10 @@ def sendAllIMUs(mac_addrs):  # mac_addrs: Table of mac addresses. Just used to g
                 rot = build_rotation_packet(sensor.qw, sensor.qx, sensor.qy, sensor.qz, i)
                 sock.sendto(rot, (SLIME_IP, SLIME_PORT))
                 PACKET_COUNTER += 1
-                accel = build_accel_packet(sensor.ax, sensor.ay, sensor.az, i)
-                sock.sendto(accel, (SLIME_IP, SLIME_PORT))
-                PACKET_COUNTER += 1
+                #Accel is not ready yet
+                #accel = build_accel_packet(sensor.ax, sensor.ay, sensor.az, i)
+                #sock.sendto(accel, (SLIME_IP, SLIME_PORT))
+                #PACKET_COUNTER += 1
             time.sleep(1 / TPS)
 
 
