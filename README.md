@@ -29,8 +29,8 @@ With moslime, the trackers can be placed and assigned to any body part you want.
 1. Start the SlimeVR™ server and wait a few seconds for it to fully load. If you want to use other trackers with SlimeVR™, don't turn them on until after you have MoSlime connected. Note: Any Mocopi™ tracker can be used on any body part. The plastic cover is purely cosmetic!
 2. Run `python3 moslime.py`, then immediately turn all the trackers back on. You can either do this manually or by plugging in the case, waiting for the trackers to light up then quickly unplugging it.
 3. You should see the lights on the trackers illuminate green one by one as they connect in the terminal. While they are connecting, leave the trackers in the case on a flat and stable surface. DO NOT touch them!
-4. Once you see `Safe to start tracking` in the terminal, make sure all trackers appear in SlimeVR™. They should show up as IMU Tracker 1, IMU Tracker 2, etc.
-4a. [Optional]: At this point you can also turn on any additional SlimeVR™ trackers and use them alongside the Mocopi™s. Make sure you always start MoSlime first. This issue will be fixed in the future.
+4. Once you see `Safe to start tracking` in the terminal, make sure all trackers appear in SlimeVR™. They should show up as IMU Tracker 1, IMU Tracker 2, etc.\
+ 4a. [Optional]: At this point you can also turn on any additional SlimeVR™ trackers and use them alongside the Mocopi™s. Make sure you always start MoSlime first. This issue will be fixed in the future.
 5. You can now put on your trackers. If you've never used SlimeVR before, just click on Setup Wizard on the lefthand side and follow the instructions. You can skip the Wi-Fi Settings step.
 
 ## Note
@@ -38,6 +38,7 @@ If you somehow accidentally close SlimeVR™, you'll need to close MoSlime and f
 
 ## Troubleshooting
  - If trackers are refusing to connect, try stopping the script (mash Ctrl+C till it stops), turn off all the trackers, restart Bluetooth® and follow the Usage section again.
+ - If your trackers are still refusing to connect, try unparing them, press the button on each tracker 10-15 times to factory reset then (they'll blink red and blue), then pair them again.
  - If you see `Safe to start tracking` but no trackers in SlimeVR™, make sure you have the correct IP address and that both computers are on the same network.
  - If your Linux PC is a desktop and range/performance seems really bad, make sure you have your WiFi/BT antenna connected. Alternatively, you can also use an external Bluetooth® dongle but your mileage may vary. 
 
