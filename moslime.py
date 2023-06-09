@@ -192,7 +192,8 @@ time.sleep(.1)
 # Add additional IMUs. SlimeVR only supports one "real" tracker per IP so the workaround is to make all the
 # trackers appear as extensions of the first tracker.
 for i in range(len(TRACKER_ADDRESSES)):
-    add_imu(i)
+    for z in range(3): # slimevr has been missing "add IMU" packets so we just send em 3 times to make sure they get thru
+     add_imu(i)
 for i in range(len(TRACKER_ADDRESSES)):  # Start notification threads
     globals()['s' + str(i) + 'thread'] = threading.Thread(target=waitForNotif, args=(i,))
     globals()['s' + str(i) + 'thread'].start()
@@ -202,4 +203,3 @@ print("Safe to start tracking")
 while True:
     sendAllIMUs(TRACKER_ADDRESSES)
     continue
-
