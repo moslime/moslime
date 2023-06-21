@@ -8,6 +8,9 @@ This third-party software is deemed alpha quality, provided as is, and without w
 Mocopi™ is a trademark owned by the Sony Corporation®. MoSlime is not endorsed by the Sony Corporation® nor SlimeVR™, nor are they affiliated with the MoSlime developers.
 This software does not modify the firmware of your Mocopi™ trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
+## Support notice
+Development will be a bit slow for the forseeable future but don't worry this project isn't abandoned by any means. We're open to accepting pull requests so feel free to open one if you have any bug fixes or feature additions!
+
 ## Requirements
  - Any VM or bare-metal Linux system with Bluetooth® and BlueZ as the Bluetooth® stack. This system can be seperate from the system that is running SlimeVR™.
  - Python 3 with bluepy and scipy installed `pip3 install bluepy scipy`
@@ -38,7 +41,7 @@ If you somehow accidentally close SlimeVR™, you'll need to close MoSlime and f
 
 ## Troubleshooting
  - If trackers are refusing to connect, try stopping the script (mash Ctrl+C till it stops), turn off all the trackers, restart Bluetooth® and follow the Usage section again.
- - If your trackers are still refusing to connect, try unparing them, press the button on each tracker 10-15 times to factory reset then (they'll blink red and blue), then pair them again.
+ - If your trackers are still refusing to connect, try unparing them, press the button on each tracker 10-15 times to factory reset them (they'll blink red and blue), then pair them again.
  - If you see `Safe to start tracking` but no trackers in SlimeVR™, make sure you have the correct IP address and that both computers are on the same network.
  - If your Linux PC is a desktop and range/performance seems really bad, make sure you have your WiFi/BT antenna connected. Alternatively, you can also use an external Bluetooth® dongle but your mileage may vary. 
 
@@ -49,7 +52,7 @@ If you somehow accidentally close SlimeVR™, you'll need to close MoSlime and f
 
 ## Contributors
  - [@lmore377](https://github.com/lmore377) - Original Bluetooth® reverse-engineering work, Python code, quaternion correction math
- - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Python Slime packet 17 code, Rust code, web interface, graphics, moral support
+ - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Slime packet generation code, Rust code, web interface, graphics, moral support
  - [@itstait](https://github.com/itstait) - Helped optimize multithreading (trust me it used to be much worse)
 
 ## Resources
