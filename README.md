@@ -10,6 +10,7 @@ This software does not modify the firmware of your Mocopi trackers and should no
 
 ## Note about Windows support
 Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. This means that service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. This limits MoSlime to just one tracker on Windows unless a workaround can be found. Until then, the Raspberry Pi is our build target.
+
 ![windows bt stack. i wish l could take screenshots](resources/windows-bt.png)
 
 ## Current and Planned Features
