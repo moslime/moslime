@@ -11,7 +11,7 @@ Mocopi is a trademark owned by the Sony Corporation. MoSlime is not endorsed by 
 This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Note about Windows support
-Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. The problem here is that these service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. This limits MoSlime to just one tracker on Windows unless a workaround can be found. Until then, we are only officially supporting Linux, more specifically the Raspberry Pi.
+Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. The problem here is that these service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. Unless a workaround is found, we are only officially supporting Linux, more specifically the Raspberry Pi. All this means is that MoSlime itself needs to run on Linux, it'll still be able to send tracker data to SlimeVR no matter what platform it's running on. 
 
 ![windows bt stack. i wish l could take screenshots](resources/windows-bt.png)
 
