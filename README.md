@@ -3,13 +3,15 @@ Bring your Mocopi trackers into SteamVR!
 
 Built on the battle-tested algorithms and runtime of SlimeVR, this project aims to improve and extend the Mocopi on PC experience. No first-party app required.
 
+Official Support Discord - https://discord.gg/vCQ2xP8KZb
+
 ## Disclaimers
 This third-party software is deemed alpha quality, provided as is, and without warranty.
 Mocopi is a trademark owned by the Sony Corporation. MoSlime is not endorsed by the Sony Corporation nor SlimeVR, nor are they affiliated with the MoSlime developers.
 This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Note about Windows support
-Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. This means that service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. This limits MoSlime to just one tracker on Windows unless a workaround can be found. Until then, the Raspberry Pi is our build target.
+Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. The problem here is that these service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. This limits MoSlime to just one tracker on Windows unless a workaround can be found. Until then, we are only officially supporting Linux, more specifically the Raspberry Pi.
 
 ![windows bt stack. i wish l could take screenshots](resources/windows-bt.png)
 
@@ -63,7 +65,7 @@ If you somehow accidentally close SlimeVR, you'll need to close MoSlime and foll
 
 ## Contributors
  - [@lmore377](https://github.com/lmore377) - Original Bluetooth reverse-engineering work, Python code, quaternion correction math
- - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Slime packet generation code, Rust code, web interface, graphics, moral support
+ - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Slime packet generation code, Rust code, wip web interface, graphics, moral support
  - [@itstait](https://github.com/itstait) - Helped optimize multithreading (trust me it used to be much worse)
 
 ## Resources
