@@ -199,7 +199,7 @@ for i in range(len(TRACKER_ADDRESSES)):  # Start notification threads
     globals()['s' + str(i) + 'thread'].start()
 time.sleep(.5)
 ALL_CONNECTED = True
-print("Safe to start tracking")
+print("Safe to start tracking. To stop MoSlime, press Ctrl-C multiple times.")
 while True:
     sendAllIMUs(TRACKER_ADDRESSES)
     continue
