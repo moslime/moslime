@@ -200,7 +200,7 @@ for i in range(len(TRACKER_ADDRESSES)):  # Start notification threads
 time.sleep(.5)
 ALL_CONNECTED = True
 print("Safe to start tracking. To stop MoSlime, press Ctrl-C multiple times.")
-print("If any of your trackers are still blinking blue, they need to be re-paired because otherwise they will turn off after a few minutes."
+print("If any of your trackers are still blinking blue, they need to be re-paired because otherwise they will turn off after a few minutes.")
 while True:
     sendAllIMUs(TRACKER_ADDRESSES)
     continue
