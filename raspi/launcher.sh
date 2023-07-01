@@ -10,7 +10,7 @@ function update {
 	sudo apt upgrade -y
 	git -C /home/moslime/moslime/ pull
         cp /home/moslime/moslime/raspi/* /home/moslime/
-	/home/moslime/autoupdater.sh
+	/home/moslime/autoupdate.sh
 	whiptail --msgbox "When you press enter, the raspberry pi will reboot. If you're using the web client, wait until it's back on then just press connect on the screen that follows. Otherwise, just ssh back in however you did it in the first place." 20 78
 	sudo shutdown -r now
 	}
