@@ -43,9 +43,9 @@ for device in devices:
       print("Pairing to: " + device.getValueText(9) + " - " + device.addr)
       time.sleep(.1)
       os.system("bluetoothctl pair " + device.addr)
-      time.sleep(2)
-      os.system("bluetoothctl disconnect " + device.addr)
       time.sleep(3)
+      os.system("bluetoothctl disconnect " + device.addr)
+      time.sleep(5)
       print("Adding " + device.addr + " to config")
       ref_config['addresses'].append(device.addr)
       paired += 1
