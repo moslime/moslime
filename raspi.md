@@ -19,12 +19,12 @@ For ease of use, we are providing a ready to use Raspberry Pi image. We **highly
    After following the above setup, you just need to pair your trackers (either manually using bluetoothctl or using the experimental auto-pair included in this image) then run 'Edit MoSlime Configuration' to put the IP address of the PC running SlimeVR. 
 
 ## DIY Image
-If you don't trust the image provided (understandable), you can create your own build. Just run these commands in a fresh raspbian lite image:\
+If you don't trust the image provided (understandable), you can create your own build. Just run these commands in a fresh raspbian lite image:
 ```
 sudo apt install git libglib2.0-dev
 git clone https://github.com/lmore377/moslime
 cd moslime
-sudo pip3 install -r requirements.txt` (if you get a "externally-managed-enviroment error, add `--break-system-packages` to the command. don't worry this won't *actually* break anything)
+sudo pip3 install -r requirements.txt` (if you get a "externally-managed-enviroment" error, add `--break-system-packages` to the command. don't worry this won't *actually* break anything)
 cd ..
 cp moslime/raspi/launcher.sh ./
 ./launcher.sh
