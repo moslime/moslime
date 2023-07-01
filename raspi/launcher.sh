@@ -25,7 +25,7 @@ function main_dialog {
 	whiptail --title "MoSlime Launcher" --menu "Select an option" 16 100 9 \
 		"1)" "Start MoSlime"   \
 		"2)" "Run bluetoothctl (Manual bluetooth pairing)"  \
-		"3)" "Edit Configuration" \
+		"3)" "Edit MoSlime Configuration" \
 		"4)" "Remove all BT devices" \
 		"5)" "Attempt auto-pair (Experimental)"\
 		"6)" "Update" \
