@@ -18,7 +18,7 @@ Windows 10 and 11 have a feature where Bluetooth LE services are added as indivi
 ## Current and Planned Features
 - [x] Auto-connect to trackers (manual pairing still needed) 
 - [x] Send IMU rotation data to SlimeVR
-- [ ] Prebuilt Raspberry Pi image for easier use
+- [x] Prebuilt Raspberry Pi image for easier use
 - [ ] Send IMU acceleration data to SlimeVR
 - [ ] UI of some sort to allow easy configuration
 - [ ] Auto discovery and paring of trackers
