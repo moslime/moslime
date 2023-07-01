@@ -17,7 +17,7 @@ function update {
 	}
 }
 
-whiptail --msgbox "Welcome to MoSlime! If this is your first time using this, please reference https://github.com/lmore377/moslime/raspi.md for instructions.\n" 20 78
+whiptail --msgbox "Welcome to MoSlime! If this is your first time using this, please reference https://github.com/lmore377/moslime/blob/main/raspi.md for instructions.\n" 20 78
 
 function main_dialog {
 	{
