@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import json
 from collections import namedtuple
-
 from bluepy import btle
 from scipy.interpolate import interp1d
 import socket
@@ -9,6 +8,7 @@ import time
 import struct
 import threading
 import numpy as np
+import os
 
 CONFIG = json.load(open('moslime.json'))
 TRACKER_ADDRESSES = CONFIG['addresses']
@@ -172,7 +172,12 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                                                                                az) #store tracker data in its container
             except Exception as e:
                 print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
-
+print("Restarting bluetooth...")
+os.system("bluetoothctl power off")
+time.sleep(3)
+os.system("bluetoothctl power on")
+time.sleep(1)
+os.system("clear")
 print("Connecting will start in 10s. Turn on all your trackers, place them on a table and don't touch them until you see Safe to start tracking.")
 print("If one or more trackers refuses to connect, you may need to re-pair it")
 print()
