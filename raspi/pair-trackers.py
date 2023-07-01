@@ -16,11 +16,14 @@ ref_config = {
   "tps": 150
 }
 
-orig_config = json.load(open('moslime/moslime.json')) # load moslime.json to get ip, port, tps
-ref_config['slime_ip'] = orig_config['slime_ip']
-ref_config['slime_port'] = orig_config['slime_port']
-ref_config['tps'] = orig_config['tps']
-
+try:
+  orig_config = json.load(open('moslime/moslime.json')) # load moslime.json to get ip, port, tps
+  ref_config['slime_ip'] = orig_config['slime_ip']
+  ref_config['slime_port'] = orig_config['slime_port']
+  ref_config['tps'] = orig_config['tps']
+except:
+  print("Existing config not found. Will generate new config.")
+  
 scanner = bluepy.btle.Scanner()
 print("Ignore the power messages. They're normal")
 os.system("bluetoothctl power off")
@@ -70,9 +73,13 @@ time.sleep(1)
 os.system("bluetoothctl power on")
 
 print("Writing config to moslime.json")
-with open("moslime/moslime.json", "w") as f:
-  json.dump(ref_config, f, indent=4)
-
+try:
+  with open("moslime/moslime.json", "w") as f:
+    json.dump(ref_config, f, indent=4)
+except:
+  print("moslime folder not found. Writing new config to current directory.")
+  with open("moslime.json", "w") as f:
+    json.dump(ref_config, f, indent=4)
 print("All done, try running MoSlime now. If trackers fail to connect, run 'Remove all BT devices' then try pairing again.")
 print("Returning to main menu in 8s.")
 time.sleep(8)
