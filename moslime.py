@@ -174,6 +174,8 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                 print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
 
 print("Connecting will start in 10s. Turn on all your trackers, place them on a table and don't touch them until you see Safe to start tracking.")
+print("If one or more trackers refuses to connect, you may need to re-pair it")
+print()
 time.sleep(10)
 print("Connecting to " + str(len(TRACKER_ADDRESSES)) + " trackers.")
 # Connect all trackers then send start command to each one
