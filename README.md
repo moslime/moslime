@@ -11,7 +11,7 @@ Mocopi is a trademark owned by the Sony Corporation. MoSlime is not endorsed by 
 This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Note about Windows support
-Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. The problem here is that these service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. Unless a workaround is found, we are only officially supporting Linux, more specifically the Raspberry Pi. All this means is that MoSlime itself needs to run on Linux, it'll still be able to send tracker data to SlimeVR no matter what platform it's running on. 
+Windows 10 and 11 have a feature where Bluetooth LE services are added as individual devices in Device Manager. The problem here is that these service devices aren't unique to every Mocopi and therefore trying to pair / connect more than Mocopi at once will fail. Unless a workaround is found, we are only officially supporting Linux. All this means is that MoSlime itself needs to run on Linux, it'll still be able to send tracker data to SlimeVR no matter what platform it's running on. 
 
 ![windows bt stack. i wish l could take screenshots](resources/windows-bt.png)
 
@@ -53,7 +53,7 @@ With MoSlime, the trackers can be placed and assigned to any body part you want.
 5. You can now put on your trackers. If you've never used SlimeVR before, just click on Setup Wizard on the lefthand side and follow the instructions. You can skip the Wi-Fi Settings step.
 
 ## Note
-If you somehow accidentally close SlimeVR, you'll need to close MoSlime and follow the Usage section again.(make sure you turn the trackers off and restart bluetooth)
+If you somehow accidentally close SlimeVR, you'll need to close MoSlime and follow the Usage section again. (make sure you turn the trackers off and restart bluetooth)
 
 ## Troubleshooting
  - If trackers are refusing to connect, try stopping the script (mash Ctrl+C till it stops), turn off all the trackers, restart Bluetooth and follow the Usage section again.

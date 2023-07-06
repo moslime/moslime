@@ -9,15 +9,14 @@ function update {
 	sudo apt update
 	sudo apt upgrade -y
 	git -C /home/moslime/moslime/ pull
-        cp /home/moslime/moslime/raspi/* /home/moslime/
-	chmod +x autoupdate.sh
+        cp /home/moslime/moslime/scripts/raspi/* /home/moslime/
 	/home/moslime/autoupdate.sh
 	whiptail --msgbox "When you press enter, the raspberry pi will reboot. If you're using the web client, wait until it's back on then just press connect on the screen that follows. Otherwise, just ssh back in however you did it in the first place." 20 78
 	sudo shutdown -r now
 	}
 }
 
-whiptail --msgbox "Welcome to MoSlime! If this is your first time using this, please reference https://github.com/lmore377/moslime/blob/main/raspi.md for instructions.\n" 20 78
+whiptail --msgbox "Welcome to MoSlime! If this is your first time using this, please reference https://github.com/lmore377/moslime/blob/main/setup/raspi.md for instructions.\n" 20 78
 
 function main_dialog {
 	{
@@ -63,6 +62,7 @@ function main_dialog {
 		"5)")
 			whiptail --msgbox "Auto pairing is still experimental and somewhat likely to fail. If you want to try it anyways, follow these directions:\n1. Turn off all your trackers\n2. Turn on all your trackers then immediately press enter. The screen should switch to a console and show all the trackers being paired.\n\nIf you see any errors in the console, run 'Remove all BT devices' in the main menu then try pairing again.\nIf you see a 'Device Disconnected' error from bluepy, just quickly run autopair again." 20 78
 			sudo python3 /home/moslime/pair-trackers.py
+			sleep 2s
 			clear
 		;;
 
