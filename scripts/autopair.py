@@ -44,6 +44,7 @@ os.system("bluetoothctl power off")
 time.sleep(1)
 os.system("bluetoothctl power on")
 time.sleep(1)
+input("Turn all your trackers off if they aren't already, turn them on then press enter to start scanning.")
 print("Start LE scan")
 try: #scan fails every other time for some reason so if it fails we just scan again lol
  devices = scanner.scan()
