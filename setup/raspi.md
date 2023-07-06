@@ -26,7 +26,7 @@ git clone https://github.com/lmore377/moslime
 cd moslime
 sudo pip3 install -r requirements.txt` (if you get a "externally-managed-enviroment" error, add `--break-system-packages` to the command. don't worry this won't *actually* break anything)
 cd ..
-cp moslime/raspi/launcher.sh ./
+cp moslime/scripts/raspi/launcher.sh ./
 ./launcher.sh
 ```
 Once the launcher runs, just run update in it and that should get everything situated. I'd recommend adding it to the end of .bashrc so that way it autoruns when you SSH in.
