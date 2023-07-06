@@ -25,7 +25,7 @@ Windows 10 and 11 have a feature where Bluetooth LE services are added as indivi
 - [ ] SlimeVR Server auto discovery
 
 ## Premade Raspberry Pi Image
-We have an experimental Raspberry Pi image meant to make running MoSlime easier. More info here: https://github.com/lmore377/moslime/blob/main/raspi.md
+We have an experimental Raspberry Pi image meant to make running MoSlime easier. More info here: https://github.com/lmore377/moslime/blob/main/setup/raspi.md
 
 ## Requirements
  - Any VM or bare-metal Linux system with Bluetooth and BlueZ as the Bluetooth stack. This system can be seperate from the system that is running SlimeVR.
