@@ -39,10 +39,11 @@ With MoSlime, the trackers can be placed and assigned to any body part you want.
  - Ankles - Should still be used for ankles
 
 ## First Time Setup
-1. Turn on all of the trackers and pair them to your computer. You can either do this by using your distros Bluetooth manager or via `bluetoothctl`.
-2. Take note of the MAC addresses for all of your trackers. They should start with `3C:38:F4`. If you have a tracker that starts with something different, please let us know!
-3. Turn off all of the trackers, then disable and re-enable Bluetooth.
-4. Download `moslime.py` and `moslime.json` then open `moslime.json` in your favorite text editor. In this file, put the MAC addresses of your trackers in `addresses` and change `slime_ip` to the IP address of the computer you're running SlimeVR on.
+1. Turn on all of the trackers and pair them to your computer. You can either do this by using your distros Bluetooth manager or via `bluetoothctl`.\
+   1a. There is an experimental autopair script in the scripts/ folder. If you're on a system with systemd (ubuntu, debian, steamdeck os, etc.), you can try that to pair your trackers by running `sudo python3 autopair.py` in the scripts folder. It will also generate a moslime.json with the MAC addresses prefilled. 
+3. Take note of the MAC addresses for all of your trackers. They should start with `3C:38:F4`. If you have a tracker that starts with something different, please let us know!
+4. Turn off all of the trackers, then disable and re-enable Bluetooth.
+5. Download `moslime.py` and `moslime.json` then open `moslime.json` in your favorite text editor. In this file, put the MAC addresses of your trackers in `addresses` and change `slime_ip` to the IP address of the computer you're running SlimeVR on.
 
 ## Usage - Please read the steps in their entirety as the process is currently time sensitive!
 1. Start the SlimeVR server and wait a few seconds for it to fully load. If you want to use other trackers with SlimeVR, don't turn them on until after you have MoSlime connected. Note: Any Mocopi tracker can be used on any body part. The plastic cover is purely cosmetic!
