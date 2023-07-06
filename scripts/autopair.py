@@ -9,6 +9,11 @@ import os
 import time
 import json
 
+exit_code = os.system("systemctl --version")
+if exit_code != 0:
+  print("Systemctl not found. Exiting.")
+  quit()
+
 ref_config = {
   "addresses": [],
   "slime_ip": "127.0.0.1",
