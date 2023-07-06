@@ -22,13 +22,13 @@ print("A backup of main.conf will be stored in the current directory just in cas
 os.system("cp /etc/bluetooth/main.conf ./bluetooth-main.conf.bak") # Make backup of /etc/bluetooth/main.conf for later restoration
 time.sleep(2)
 print("Stopping bluetoothd...")
-os.system("service bluetooth stop")
+os.system("systemctl stop bluetooth")
 print("Modifying /etc/bluetooth/main.conf")
 mainconf = open("/etc/bluetooth/main.conf", "w")
 mainconf.write("[General]\nTemporaryTimeout = 300\n[Policy]\nAutoEnable=true\n")
 mainconf.close()
 print("Starting bluetoothd...")
-os.system("service bluetooth start")
+os.system("systemctl start bluetooth")
 
 try:
   orig_config = json.load(open('moslime.json')) # load moslime.json to get ip, port, tps
@@ -81,9 +81,9 @@ for device in devices:
 #print("Disconnecting all in 10s")
 
 print("Paired to " + str(paired) + " trackers. Restoring main.conf and restarting bluetooth.")
-os.system("service bluetooth stop")
+os.system("systemctl stop bluetooth")
 os.system("cp bluetooth-main.conf.bak /etc/bluetooth/main.conf")
-os.system("service bluetooth start")
+os.system("systemctl start bluetooth")
 time.sleep(1)
 
 print("Writing config to moslime.json")
