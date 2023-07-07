@@ -63,8 +63,8 @@ If you somehow accidentally close SlimeVR, you'll need to close MoSlime and foll
  - If your Linux PC is a desktop and range/performance seems really bad, make sure you have your WiFi/BT antenna connected. Alternatively, you can also use an external Bluetooth dongle but your mileage may vary. 
 
 ## Tested Bluetooth adapters
- - [SENA UD100](http://www.senanetworks.com/ud100-g03.hl)
- - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.hl)
+ - [SENA UD100](http://www.senanetworks.com/ud100-g03.html)
+ - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
  - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit, it may be a good idea to lower the TPS in moslime.json)
 
 ## Contributors
