@@ -9,10 +9,30 @@ import os
 import time
 import json
 
-exit_code = os.system("systemctl --version")
-if exit_code != 0:
-  print("Systemctl not found. Exiting.")
+# test to see which service command to use
+sysctl = os.system("systemctl --version")
+serv = os.system("service")
+if sysctl = 0:
+  print("Using systemctl")
+  mode = 1
+elif serv = 0:
+  print("Using service")
+  mode = 2
+else:
+  print("Don't know how to stop bluetoothd. Exiting.)
   quit()
+
+def stop_bt():
+  if mode = 1:
+    os.system("systemctl stop bluetooth")
+  elif mode = 2:
+    os.system("service bluetooth stop")
+
+def start_bt():
+  if mode = 1:
+    os.system("systemctl start bluetooth")
+  elif mode = 2:
+    os.system("service bluetooth start")
 
 ref_config = {
   "addresses": [],
@@ -30,13 +50,13 @@ print("A backup of main.conf will be stored in the current directory just in cas
 os.system("cp /etc/bluetooth/main.conf ./bluetooth-main.conf.bak") # Make backup of /etc/bluetooth/main.conf for later restoration
 time.sleep(2)
 print("Stopping bluetoothd...")
-os.system("systemctl stop bluetooth")
+stop_bt()
 print("Modifying /etc/bluetooth/main.conf")
 mainconf = open("/etc/bluetooth/main.conf", "w")
 mainconf.write("[General]\nTemporaryTimeout = 300\n[Policy]\nAutoEnable=true\n")
 mainconf.close()
 print("Starting bluetoothd...")
-os.system("systemctl start bluetooth")
+start_bt()
 
 try:
   orig_config = json.load(open('moslime.json')) # load moslime.json to get ip, port, tps
@@ -90,9 +110,9 @@ for device in devices:
 #print("Disconnecting all in 10s")
 
 print("Paired to " + str(paired) + " trackers. Restoring main.conf and restarting bluetooth.")
-os.system("systemctl stop bluetooth")
+stop_bt()
 os.system("cp bluetooth-main.conf.bak /etc/bluetooth/main.conf")
-os.system("systemctl start bluetooth")
+start_bt()
 time.sleep(1)
 
 print("Writing config to moslime.json")
