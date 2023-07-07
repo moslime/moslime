@@ -19,7 +19,7 @@ elif serv == 0:
   print("Using service")
   mode == 2
 else:
-  print("Don't know how to stop bluetoothd. Exiting.)
+  print("Don't know how to stop bluetoothd. Exiting.")
   quit()
 
 def stop_bt():
