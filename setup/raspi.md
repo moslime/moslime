@@ -24,7 +24,7 @@ If you don't trust the image provided (understandable), you can create your own 
 sudo apt install git libglib2.0-dev
 git clone https://github.com/lmore377/moslime
 cd moslime
-sudo pip3 install -r requirements.txt` (if you get a "externally-managed-enviroment" error, add `--break-system-packages` to the command. don't worry this won't *actually* break anything)
+sudo pip3 install -r requirements.txt (if you get a "externally-managed-enviroment" error, add `--break-system-packages` to the command. don't worry this won't *actually* break anything)
 cd ..
 cp moslime/scripts/raspi/launcher.sh ./
 ./launcher.sh
