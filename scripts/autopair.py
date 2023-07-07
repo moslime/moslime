@@ -12,26 +12,26 @@ import json
 # test to see which service command to use
 sysctl = os.system("systemctl --version")
 serv = os.system("service")
-if sysctl = 0:
+if sysctl == 0:
   print("Using systemctl")
-  mode = 1
-elif serv = 0:
+  mode == 1
+elif serv == 0:
   print("Using service")
-  mode = 2
+  mode == 2
 else:
   print("Don't know how to stop bluetoothd. Exiting.)
   quit()
 
 def stop_bt():
-  if mode = 1:
+  if mode == 1:
     os.system("systemctl stop bluetooth")
-  elif mode = 2:
+  elif mode == 2:
     os.system("service bluetooth stop")
 
 def start_bt():
-  if mode = 1:
+  if mode == 1:
     os.system("systemctl start bluetooth")
-  elif mode = 2:
+  elif mode == 2:
     os.system("service bluetooth start")
 
 ref_config = {
