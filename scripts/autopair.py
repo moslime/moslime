@@ -14,10 +14,10 @@ sysctl = os.system("systemctl --version")
 serv = os.system("service")
 if sysctl == 0:
   print("Using systemctl")
-  mode == 1
-elif serv == 0:
+  mode = 1
+elif serv == 256:
   print("Using service")
-  mode == 2
+  mode = 2
 else:
   print("Don't know how to stop bluetoothd. Exiting.")
   quit()
