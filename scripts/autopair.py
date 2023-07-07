@@ -22,7 +22,10 @@ ref_config = {
 }
 
 print("This script will temporarily modify /etc/bluetooth/main.conf but will restore it once it's done.")
-input("If you're fine with this, press enter to coninue. If not, press Ctrl+C")
+print("このスクリプトは一時的に/etc/bluetooth/main.confを変更しますが、完了すると元に戻します。")
+print("If you're fine with this, press enter to continue. If not, press Ctrl+C")
+input("これでよければ、エンターキーを押して続ける。そうでない場合は、Ctrl+Cを押してください。")
+
 print("A backup of main.conf will be stored in the current directory just in case.")
 os.system("cp /etc/bluetooth/main.conf ./bluetooth-main.conf.bak") # Make backup of /etc/bluetooth/main.conf for later restoration
 time.sleep(2)
