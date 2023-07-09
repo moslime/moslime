@@ -38,9 +38,8 @@ def add_imu(trackerID):
     buffer = b'\x00\x00\x00\x0f'  # packet 15 header
     buffer += struct.pack('>Q', PACKET_COUNTER) #packet counter
     buffer += struct.pack('B', trackerID) #tracker id (shown as IMU Tracker #x in SlimeVR)
-    buffer += struct.pack('B', 0) #sensor status (placeholder, seems to not be used by SlimeVR currently)
-    buffer += struct.pack('B', 0) #sensor type (placeholder, seems to not be used by SlimeVR currently)
-    buffer += struct.pack('B', 255)
+    buffer += struct.pack('B', 0) #sensor status
+    buffer += struct.pack('B', 0) #sensor type
     sock.sendto(buffer, (SLIME_IP, SLIME_PORT))
     print("Add IMU: " + str(trackerID))
     PACKET_COUNTER += 1
