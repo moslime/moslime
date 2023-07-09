@@ -21,7 +21,11 @@ def build_handshake():
     fw_string = "MoSlime"
     buffer = b'\x00\x00\x00\x03'  # packet 3 header
     buffer += struct.pack('>Q', PACKET_COUNTER) # packet counter
-    buffer += struct.pack('>LLLLLLL', 0, 0, 0, 0, 0, 0, 0) # padding 
+    buffer += struct.pack('>I', 0) # board ID 
+    buffer += struct.pack('>I', 0) # IMU type
+    buffer += struct.pack('>I', 0) # MCU type
+    buffer += struct.pack('>III', 0, 0, 0) # IMU info
+    buffer += struct.pack('>I', 0) # Build
     buffer += struct.pack('B', len(fw_string)) #length of fw string
     buffer += struct.pack(str(len(fw_string)) + 's', fw_string.encode('UTF-8')) #fw string
     buffer += struct.pack('6s', '111111'.encode('UTF-8')) #MAC address (just using a placeholder of 31:31:31:31:31:31 for now)
