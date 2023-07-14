@@ -17,5 +17,5 @@ git clone https://github.com/lmore377/moslime
 cd moslime
 sudo pip3 install -r requirements.txt # read note at the bottom
 ```
- - If you get  an error about breaking system packages at the `pip3` command, just add `--break-system-packages` to it. This won't actually break anything.
+ - If you get an error about breaking system packages at the `pip3` command, just add `--break-system-packages` to it. This really isn't the best thing to do but we just have since bluepy isn't avalible via apt.
 2. Continue by following the instructions here: [first-time-and-usage.md](setup/first-time-and-usage.md)
