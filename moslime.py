@@ -10,12 +10,42 @@ import threading
 import numpy as np
 import os
 
-CONFIG = json.load(open('moslime.json'))
-TRACKER_ADDRESSES = CONFIG['addresses']
-SLIME_IP = CONFIG['slime_ip']  # SlimeVR Server
-SLIME_PORT = CONFIG['slime_port']  # SlimeVR Server
-TPS = CONFIG['tps']  # SlimeVR packet frequency. Keep below 300 (above 300 has weird behavior)
+ref_config = { # Reference config, used when moslime.json is missing
+  "addresses": ["3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX"],
+  "autodiscovery": True,
+  "slime_ip": "127.0.0.1",
+  "slime_port": 6969,
+  "tps": 150
+}
 
+try:
+  CONFIG = json.load(open('moslime.json'))
+except:
+  with open("moslime.json", "w") as f:
+    json.dump(ref_config, f, indent=4)
+  print("moslime.json not found. A new config file has been created, please edit it before attempting to run MoSlime again.")
+  quit()
+try:
+  TRACKER_ADDRESSES = CONFIG['addresses']
+  AUTODISCOVER = CONFIG['autodiscovery'] # SlimeVR autodiscovery
+  SLIME_IP = CONFIG['slime_ip']  # SlimeVR Server
+  SLIME_PORT = CONFIG['slime_port']  # SlimeVR Server
+  TPS = CONFIG['tps']  # SlimeVR packet frequency. Keep below 300 (above 300 has weird behavior)
+except:
+  ref_config['addresses'] = CONFIG['addresses']
+  with open("moslime.json", "w") as f:
+    json.dump(ref_config, f, indent=4)
+  print("There was an issue loading moslime.json. The file will be regenerated and your trackers will be copied to the new one but all other settings will be reset.")
+  print("Please check the file then try running MoSlime again. If this issue persists, go to the support channel in the Discord.")
+  quit()
+  
+PACKET_COUNTER = 0 # global packet counter. MUST be incremented every time a packet is sent or slime gets mad
+CMD_UUID = '0000ff00-0000-1000-8000-00805f9b34fb' # BLE UUID to send commands to
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Setup network socket
+ALL_CONNECTED = False
+MocopiPacket = namedtuple('MocopiPacket', 'sensor_id, qw, qx, qy, qz, ax, ay, az') # container that holds the data of a given trackerID
+for i in range(len(TRACKER_ADDRESSES)):
+    globals()['sensor' + str(i) + 'data'] = MocopiPacket(0, 0, 0, 0, 0, 0, 0, 0)  # Create tracker data containers
 
 def build_handshake():
     fw_string = "MoSlime"
@@ -28,7 +58,7 @@ def build_handshake():
     buffer += struct.pack('>I', 0) # Build
     buffer += struct.pack('B', len(fw_string)) #length of fw string
     buffer += struct.pack(str(len(fw_string)) + 's', fw_string.encode('UTF-8')) #fw string
-    buffer += struct.pack('6s', '111111'.encode('UTF-8')) #MAC address (just using a placeholder of 31:31:31:31:31:31 for now)
+    buffer += struct.pack('6s', b'\x49\x4C\x4F\x56\x45\x50') # MAC address
     buffer += struct.pack('B', 255)
     return buffer
 
@@ -86,17 +116,6 @@ def multiply(w1, x1, y1, z1, w2, x2, y2, z2): #multiply a quat by another
     z = w1 * z2 + z1 * w2 + x1 * y2 - y1 * x2
     return w, x, y, z
 
-
-PACKET_COUNTER = 0 # global packet counter. MUST be incremented every time a packet is sent or slime gets mad
-CMD_UUID = '0000ff00-0000-1000-8000-00805f9b34fb' # BLE UUID to send commands to
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-ZERO_QUAT = [1, 0, 0, 0]
-ALL_CONNECTED = False
-MocopiPacket = namedtuple('MocopiPacket', 'sensor_id, qw, qx, qy, qz, ax, ay, az') # container that holds the data of a given trackerID
-for i in range(len(TRACKER_ADDRESSES)):
-    globals()['sensor' + str(i) + 'data'] = MocopiPacket(0, 0, 0, 0, 0, 0, 0, 0)  # Create tracker data containers
-
-
 def sendAllIMUs(mac_addrs):  # mac_addrs: Table of mac addresses. Just used to get number of trackers
     global TPS, PACKET_COUNTER
     while True:
@@ -151,7 +170,7 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
         self.trakID = tID
 
     def handleNotification(self, _, data):
-        global ZERO_QUAT, ALL_CONNECTED
+        global ALL_CONNECTED
         if ALL_CONNECTED:  # Don't collect data until all trackers successfully connect
             try:
                 # take in hex data and chop it up into usable stuff
@@ -175,12 +194,14 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                                                                                az) #store tracker data in its container
             except Exception as e:
                 print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
+                
 print("Restarting bluetooth...")
 os.system("bluetoothctl power off")
 time.sleep(3)
 os.system("bluetoothctl power on")
 time.sleep(1)
 os.system("clear")
+
 print("Connecting will start in 10s. Turn on all your trackers, place them on a table and don't touch them until you see Safe to start tracking.")
 print("If one or more trackers refuses to connect, you may need to re-pair it")
 print()
@@ -192,7 +213,24 @@ for i in range(len(TRACKER_ADDRESSES)):
 for i in range(len(TRACKER_ADDRESSES)):
     sendCommand(i, "start")
 time.sleep(3)  # Give trackers a few seconds to stabilize
-# Send the initial handshake to SlimeVR
+
+# If autodiscovery is enabled, broadcast a handshake on the network
+if AUTODISCOVER: 
+  found = False
+  sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1) # allow broadcasting on this socket
+  handshake = build_handshake()
+  sock.bind(('0.0.0.0', 9696)) # listen on port 9696 to avoid conflicts with slime
+  sock.sendto(handshake, ("255.255.255.255", 6969)) # broadcast handshake on all interfaces
+  while not found:
+    data, src = sock.recvfrom(1024)
+    if "Hey OVR =D" in str(data.decode('utf-8')): # SlimeVR responds with a packet containing "Hey OVR =D"
+     found = True
+     SLIME_IP = src[0]
+     SLIME_PORT = src[1]
+  print("Found SlimeVR at " + str(SLIME_IP) + ":" + str(SLIME_PORT))
+else:
+  print("Got SlimeVR server from config: " + str(SLIME_IP) + ":" + str(SLIME_PORT))
+
 handshake = build_handshake()
 sock.sendto(handshake, (SLIME_IP, SLIME_PORT))
 PACKET_COUNTER += 1
@@ -209,6 +247,7 @@ for i in range(len(TRACKER_ADDRESSES)):  # Start notification threads
     globals()['s' + str(i) + 'thread'].start()
 time.sleep(.5)
 ALL_CONNECTED = True
+
 print("Safe to start tracking. To stop MoSlime, press Ctrl-C multiple times.")
 print("If any of your trackers are still blinking blue, they need to be re-paired because otherwise they will turn off after a few minutes.")
 while True:

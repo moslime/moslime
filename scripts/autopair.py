@@ -36,6 +36,7 @@ def start_bt():
 
 ref_config = {
   "addresses": [],
+  "autodiscovery": True,
   "slime_ip": "127.0.0.1",
   "slime_port": 6969,
   "tps": 150
@@ -61,6 +62,7 @@ start_bt()
 
 try:
   orig_config = json.load(open('moslime.json')) # load moslime.json to get ip, port, tps
+  ref_config['autodiscovery'] = orig_config['autodiscovery']
   ref_config['slime_ip'] = orig_config['slime_ip']
   ref_config['slime_port'] = orig_config['slime_port']
   ref_config['tps'] = orig_config['tps']
