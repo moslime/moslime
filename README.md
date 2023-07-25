@@ -22,7 +22,7 @@ Windows 10 and 11 have a feature where Bluetooth LE services are added as indivi
 - [x] Auto discovery and paring of trackers (Partially complete)
 - [ ] Send IMU acceleration data to SlimeVR
 - [ ] UI of some sort to allow easy configuration
-- [ ] SlimeVR Server auto discovery
+- [x] SlimeVR Server auto discovery
 
 ## Premade Raspberry Pi Image
 We have an experimental Raspberry Pi image meant to make running MoSlime easier. More info here: https://github.com/lmore377/moslime/blob/main/setup/raspi.md
