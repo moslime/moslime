@@ -19,11 +19,17 @@ ref_config = { # Reference config, used when moslime.json is missing
 }
 
 try:
-  CONFIG = json.load(open('moslime.json'))
+  f = open('moslime.json')
 except:
   with open("moslime.json", "w") as f:
     json.dump(ref_config, f, indent=4)
   print("moslime.json not found. A new config file has been created, please edit it before attempting to run MoSlime again.")
+  quit()
+try:
+  CONFIG = json.load(f)
+except:
+  print("There was an issue loading moslime.json. Please check that there aren't any stray commas or mispellings.")
+  print("If this issue persists, delete moslime.json and run MoSlime again to regenerate the config.")
   quit()
 try:
   TRACKER_ADDRESSES = CONFIG['addresses']
@@ -35,7 +41,7 @@ except:
   ref_config['addresses'] = CONFIG['addresses']
   with open("moslime.json", "w") as f:
     json.dump(ref_config, f, indent=4)
-  print("There was an issue loading moslime.json. The file will be regenerated and your trackers will be copied to the new one but all other settings will be reset.")
+  print("One or more options were missing from moslime.json. The file has been recreated and your MAC addresses have been copied over.")
   print("Please check the file then try running MoSlime again. If this issue persists, go to the support channel in the Discord.")
   quit()
   
@@ -214,27 +220,32 @@ for i in range(len(TRACKER_ADDRESSES)):
     sendCommand(i, "start")
 time.sleep(3)  # Give trackers a few seconds to stabilize
 
-# If autodiscovery is enabled, broadcast a handshake on the network
-if AUTODISCOVER: 
-  found = False
-  sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1) # allow broadcasting on this socket
-  handshake = build_handshake()
-  sock.bind(('0.0.0.0', 9696)) # listen on port 9696 to avoid conflicts with slime
-  sock.sendto(handshake, ("255.255.255.255", 6969)) # broadcast handshake on all interfaces
-  while not found:
+if AUTODISCOVER:
+  SLIME_IP = "255.255.255.255"
+  print('Autodiscovery enabled. If this gets stuck at "Searching...", try disabling it and manually set the SlimeVR IP.')
+else:
+  SLIME_IP = CONFIG['slime_ip']
+  SLIME_PORT = CONFIG['slime_port']
+  print('Using SlimeVR IP from config. If this gets stuck at "Searching...", make sure you have the right IP set in moslime.json')
+found = False
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1) # allow broadcasting on this socket
+handshake = build_handshake()
+sock.bind(('0.0.0.0', 9696)) # listen on port 9696 to avoid conflicts with slime
+sock.settimeout(1)
+print("Searching for SlimeVR")
+while not found:
+  try:
+    print("Searching...")
+    sock.sendto(handshake, (SLIME_IP, SLIME_PORT)) # broadcast handshake on all interfaces
     data, src = sock.recvfrom(1024)
     if "Hey OVR =D" in str(data.decode('utf-8')): # SlimeVR responds with a packet containing "Hey OVR =D"
-     found = True
-     SLIME_IP = src[0]
-     SLIME_PORT = src[1]
-  print("Found SlimeVR at " + str(SLIME_IP) + ":" + str(SLIME_PORT))
-else:
-  print("Got SlimeVR server from config: " + str(SLIME_IP) + ":" + str(SLIME_PORT))
-
-handshake = build_handshake()
-sock.sendto(handshake, (SLIME_IP, SLIME_PORT))
+      found = True
+      SLIME_IP = src[0]
+      SLIME_PORT = src[1]
+  except:
+    time.sleep(0)
+print("Found SlimeVR at " + str(SLIME_IP) + ":" + str(SLIME_PORT))
 PACKET_COUNTER += 1
-print("Handshake")
 time.sleep(.1)
 
 # Add additional IMUs. SlimeVR only supports one "real" tracker per IP so the workaround is to make all the
