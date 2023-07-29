@@ -169,7 +169,7 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
     # When Mocopi trackers start they sometimes send a few packets that aren't IMU data so we just discard the first
     # 10 to be safe
     offset = (0, 0, 0, 0)
-
+    lastCounter = 0
     def __init__(self, tID):
         btle.DefaultDelegate.__init__(self)
         print("Connected to tracker ID " + str(tID))
@@ -191,13 +191,19 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                     # Once a number of packets have been discarded, we calculate the offset needed to make SlimeVR happy
                     self.offset = multiply(pw, -px, -py, -pz, 1, 0, 0, 0)
                     self.ignorePackets += 1
+                    self.lastCounter = int.from_bytes(data[1:8], "little")
                     return
                 elif self.ignorePackets < 0:
                     self.ignorePackets += 1
+                    self.lastCounter = int.from_bytes(data[1:8], "little")
+                    return
                 qwc, qxc, qyc, qzc = multiply(pw, px, py, pz, *self.offset) #apply quat offset/correctiom
                 az, ay, az = correct(ax, ay, az) #apply accel offset
                 globals()['sensor' + str(self.trakID) + 'data'] = MocopiPacket(self.trakID, qwc, qxc, qyc, qzc, ax, ay,
                                                                                az) #store tracker data in its container
+                if (int.from_bytes(data[1:8], "little") - self.lastCounter) != 78125:
+                    print("Packet dropped on tracker " + str(self.trakID) + ", current packet num: " + str(int.from_bytes(data[1:8], "little")))
+                self.lastCounter = int.from_bytes(data[1:8], "little")
             except Exception as e:
                 print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
                 
