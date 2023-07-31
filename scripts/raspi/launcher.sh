@@ -53,9 +53,7 @@ function main_dialog {
 		;;
 
 		"4)")
-			for device in $(bluetoothctl devices  | grep -o "[[:xdigit:]:]\{8,17\}"); do
-				echo "removing bluetooth device: $device | $(bluetoothctl remove $device)"
-			done
+			sudo python3 /home/moslime/unpair.py
 			clear
 		;;
 
