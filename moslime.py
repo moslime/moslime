@@ -2,7 +2,6 @@
 import json
 from collections import namedtuple
 from bluepy import btle
-from scipy.interpolate import interp1d
 import socket
 import time
 import struct
@@ -106,8 +105,8 @@ def sendCommand(tId, cmd):  # id: Tracker ID / cmd: Command to send
     else:
         print("Invalid command")
 
-
-interp = interp1d([-8192, 8192], [-1, 1]) # mocopi sends quat as a signed int from -8192to8192 but quats are -1to1. this scales down the mocopi data
+def interp (val_in): # mocopi sends quat as a signed int from -8192to8192 but quats are -1to1. this scales down the mocopi data
+    return (((val_in - -8192) * (1 - -1)) / (8192 - -8192)) + -1
 def hexToQuat(bytes):
     return interp(int.from_bytes(bytes, byteorder='little', signed=True))
 def hexToFloat(bytes):

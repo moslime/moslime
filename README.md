@@ -29,7 +29,7 @@ We have an experimental Raspberry Pi image meant to make running MoSlime easier.
 
 ## Requirements
  - Any VM or bare-metal Linux system with Bluetooth and BlueZ as the Bluetooth stack. This system can be seperate from the system that is running SlimeVR.
- - Python 3 with bluepy and scipy installed `pip3 install bluepy scipy`
+ - Python 3 with bluepy installed `pip3 install bluepy`
 
 ## Tracker Mounting
 With MoSlime, the trackers can be placed and assigned to any body part you want. Assuming you're using moslime alongside a VR headset, here are the recommended tracker positions:
