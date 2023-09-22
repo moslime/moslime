@@ -25,7 +25,7 @@ try:
   ref_config['autodiscovery'] = orig_config['autodiscovery']
 except:
   print("Existing config not found. Will generate new config.")
-  
+
 scanner = bluepy.btle.Scanner()
 print("Ignore the power messages. They're normal")
 os.system("bluetoothctl power off")

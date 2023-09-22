@@ -44,7 +44,7 @@ except:
   print("One or more options were missing from moslime.json. The file has been recreated and your MAC addresses have been copied over.")
   print("Please check the file then try running MoSlime again. If this issue persists, go to the support channel in the Discord.")
   quit()
-  
+
 PACKET_COUNTER = 0 # global packet counter. MUST be incremented every time a packet is sent or slime gets mad
 CMD_UUID = '0000ff00-0000-1000-8000-00805f9b34fb' # BLE UUID to send commands to
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # Setup network socket
@@ -57,7 +57,7 @@ def build_handshake():
     fw_string = "MoSlime"
     buffer = b'\x00\x00\x00\x03'  # packet 3 header
     buffer += struct.pack('>Q', PACKET_COUNTER) # packet counter
-    buffer += struct.pack('>I', 0) # board ID 
+    buffer += struct.pack('>I', 0) # board ID
     buffer += struct.pack('>I', 0) # IMU type
     buffer += struct.pack('>I', 0) # MCU type
     buffer += struct.pack('>III', 0, 0, 0) # IMU info
@@ -206,7 +206,7 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                 self.lastCounter = int.from_bytes(data[1:8], "little")
             except Exception as e:
                 print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
-                
+
 print("Restarting bluetooth...")
 os.system("bluetoothctl power off")
 time.sleep(3)
