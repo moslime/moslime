@@ -14,7 +14,7 @@ pkexec /bin/bash <<EOF
     sed -i "s/SigLevel    = Required DatabaseOptional/SigLevel = Never/g" /etc/pacman.conf
     echo "[Step 4 <] Pacman signature verification disabled."
     echo "[Step 5 >] Installing dependencies."
-    pacman --noconfirm -S jdk17-openjdk python-bluepy python-numpy
+    pacman --noconfirm -S jdk17-openjdk python-bluepy
     echo "[Step 5 <] Dependencies installed."
     echo "[Step 6 >] Installing latest SlimeVR."
     mkdir /home/deck/slimevr

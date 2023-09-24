@@ -6,7 +6,6 @@ import socket
 import time
 import struct
 import threading
-import numpy as np
 import os
 
 ref_config = { # Reference config, used when moslime.json is missing
@@ -110,7 +109,7 @@ def interp (val_in): # mocopi sends quat as a signed int from -8192to8192 but qu
 def hexToQuat(bytes):
     return interp(int.from_bytes(bytes, byteorder='little', signed=True))
 def hexToFloat(bytes):
-    return np.frombuffer(bytes, dtype=np.float16)
+    return struct.unpack('<e', bytes)[0]
 def waitForNotif(num): #starts the notification listener for a given trackerID. should be ran on its own thread
     while True:
         globals()['t' + str(num)].waitForNotifications(0)
