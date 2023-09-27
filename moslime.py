@@ -129,10 +129,10 @@ def sendAllIMUs(mac_addrs):  # mac_addrs: Table of mac addresses. Just used to g
                 rot = build_rotation_packet(sensor.qw, sensor.qx, sensor.qy, sensor.qz, i)
                 sock.sendto(rot, (SLIME_IP, SLIME_PORT))
                 PACKET_COUNTER += 1
-                #Accel is not ready yet
-                #accel = build_accel_packet(sensor.ax, sensor.ay, sensor.az, i)
-                #sock.sendto(accel, (SLIME_IP, SLIME_PORT))
-                #PACKET_COUNTER += 1
+                #Accel is still technically not ready yet (it doesn't rotate with the axes) but it's enough for features like tap detection
+                accel = build_accel_packet(sensor.ax, sensor.ay, sensor.az, i)
+                sock.sendto(accel, (SLIME_IP, SLIME_PORT))
+                PACKET_COUNTER += 1
             time.sleep(1 / TPS)
 
 
@@ -153,16 +153,13 @@ def connectTracker(mac_addr, tId):
             continue
         break
 
-def correct(aX, aY, aZ): #will be used to correct accel data from tracker
-    SEN4G = 8192.0
-    ASC4G = ((32768.0 / SEN4G) / 32768.0) * 9.80665
-    aX2 = aX * ASC4G
-    aY2 = aY * ASC4G
-    aZ2 = aZ * ASC4G
+def correctAccel(aX, aY, aZ): # Used to correct accel data from tracker (dividing the tracker data by .12 makes it match the standard m/s^2)
+    aX2 = aX * .12
+    aY2 = aY * .12
+    aZ2 = aZ * .12
     return aX2, aY2, aZ2
 
 class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies any needed corrections and saves it to the container for a given trackerID
-    trakID = 0
     ignorePackets = -10
     # When Mocopi trackers start they sometimes send a few packets that aren't IMU data so we just discard the first
     # 10 to be safe
@@ -183,8 +180,8 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                 py = hexToQuat(data[12:14])
                 pz = hexToQuat(data[14:16])
                 ax = hexToFloat(data[24:26])
-                ay = hexToFloat(data[26:28])
-                az = hexToFloat(data[28:30])
+                az = hexToFloat(data[26:28])
+                ay = hexToFloat(data[28:30])
                 if self.ignorePackets == 0:
                     # Once a number of packets have been discarded, we calculate the offset needed to make SlimeVR happy
                     self.offset = multiply(pw, -px, -py, -pz, 1, 0, 0, 0)
@@ -196,9 +193,9 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                     self.lastCounter = int.from_bytes(data[1:8], "little")
                     return
                 qwc, qxc, qyc, qzc = multiply(pw, px, py, pz, *self.offset) #apply quat offset/correctiom
-                az, ay, az = correct(ax, ay, az) #apply accel offset
-                globals()['sensor' + str(self.trakID) + 'data'] = MocopiPacket(self.trakID, qwc, qxc, qyc, qzc, ax, ay,
-                                                                               az) #store tracker data in its container
+                axc, ayc, azc = correctAccel(ax, ay, az) #apply accel offset
+                globals()['sensor' + str(self.trakID) + 'data'] = MocopiPacket(self.trakID, qwc, qxc, qyc, qzc, axc, ayc,
+                                                                               azc) #store tracker data in its container
                 if (int.from_bytes(data[1:8], "little") - self.lastCounter) != 78125:
                     print("Packet dropped on tracker " + str(self.trakID) + ", current packet num: " + str(int.from_bytes(data[1:8], "little")))
                 self.lastCounter = int.from_bytes(data[1:8], "little")
