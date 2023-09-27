@@ -11,7 +11,7 @@ function update {
 	git -C /home/moslime/moslime/ pull
         cp /home/moslime/moslime/scripts/raspi/* /home/moslime/
 	/home/moslime/autoupdate.sh
-	whiptail --msgbox "When you press enter, the raspberry pi will reboot. If you're using the web client, wait until it's back on then just press connect on the screen that follows. Otherwise, just ssh back in however you did it in the first place." 20 78
+	whiptail --msgbox "When you press enter, the raspberry pi will reboot. Just ssh back in however you did it in the first place once the Pi seems to be done booting." 20 78
 	sudo shutdown -r now
 	}
 }
