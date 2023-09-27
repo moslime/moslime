@@ -110,9 +110,16 @@ def hexToQuat(bytes):
     return interp(int.from_bytes(bytes, byteorder='little', signed=True))
 def hexToFloat(bytes):
     return struct.unpack('<e', bytes)[0]
-def waitForNotif(num): #starts the notification listener for a given trackerID. should be ran on its own thread
+def waitForNotif(num, mac): #starts the notification listener for a given trackerID. should be ran on its own thread
     while True:
-        globals()['t' + str(num)].waitForNotifications(0)
+        try:
+            globals()['t' + str(num)].waitForNotifications(0)
+        except Exception as e:
+           print("Tracker " + str(num) + " disconnected. Attepting reconnect.")
+           connectTracker(mac, num, True)
+           time.sleep(3)
+           continue
+
 def multiply(w1, x1, y1, z1, w2, x2, y2, z2): #multiply a quat by another
     w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
     x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
@@ -136,7 +143,7 @@ def sendAllIMUs(mac_addrs):  # mac_addrs: Table of mac addresses. Just used to g
             time.sleep(1 / TPS)
 
 
-def connectTracker(mac_addr, tId):
+def connectTracker(mac_addr, tId, retry):
     # mac_addr: Tracker MAC address / id: Tracker ID to send to slime (should be 0 for first tracker, anything for additional trackers)
     while True:
         try:
@@ -147,6 +154,8 @@ def connectTracker(mac_addr, tId):
             globals()['cmd_t' + str(tId)] = globals()['t' + str(tId)].getServiceByUUID(CMD_UUID)
             globals()['cmd_ch_t' + str(tId)] = globals()['cmd_t' + str(tId)].getCharacteristics()[1]
             time.sleep(.5)
+            if retry:
+               globals()['cmd_ch_t' + str(tId)].write(bytearray(b'\x7e\x03\x18\xd6\x01\x00\x00'), True)
         except Exception as e:
             print("Tracker " + str(tId) + " EX: " + str(e))
             time.sleep(3)
@@ -200,6 +209,8 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                     print("Packet dropped on tracker " + str(self.trakID) + ", current packet num: " + str(int.from_bytes(data[1:8], "little")))
                 self.lastCounter = int.from_bytes(data[1:8], "little")
             except Exception as e:
+                if "unpack requires a buffer of 2 bytes" in str(e):
+                   print("Following exception can be ignored:")
                 print("class exception: " + str(e) + " trackerid: " + str(self.trakID))
 
 print("Restarting bluetooth...")
@@ -216,7 +227,7 @@ time.sleep(10)
 print("Connecting to " + str(len(TRACKER_ADDRESSES)) + " trackers.")
 # Connect all trackers then send start command to each one
 for i in range(len(TRACKER_ADDRESSES)):
-    connectTracker(TRACKER_ADDRESSES[i], i)
+    connectTracker(TRACKER_ADDRESSES[i], i, False)
 for i in range(len(TRACKER_ADDRESSES)):
     sendCommand(i, "start")
 time.sleep(3)  # Give trackers a few seconds to stabilize
@@ -255,7 +266,7 @@ for i in range(len(TRACKER_ADDRESSES)):
     for z in range(3): # slimevr has been missing "add IMU" packets so we just send em 3 times to make sure they get thru
      add_imu(i)
 for i in range(len(TRACKER_ADDRESSES)):  # Start notification threads
-    globals()['s' + str(i) + 'thread'] = threading.Thread(target=waitForNotif, args=(i,))
+    globals()['s' + str(i) + 'thread'] = threading.Thread(target=waitForNotif, args=(i, TRACKER_ADDRESSES[i]))
     globals()['s' + str(i) + 'thread'].start()
 time.sleep(.5)
 ALL_CONNECTED = True
