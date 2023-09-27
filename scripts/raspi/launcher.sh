@@ -8,6 +8,7 @@ function update {
         clear
 	sudo apt update
 	sudo apt upgrade -y
+ 	sudo apt clean
 	git -C /home/moslime/moslime/ pull
         cp /home/moslime/moslime/scripts/raspi/* /home/moslime/
 	/home/moslime/autoupdate.sh
