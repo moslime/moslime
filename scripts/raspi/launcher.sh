@@ -9,7 +9,10 @@ function update {
 	sudo apt update
 	sudo apt upgrade -y
  	sudo apt clean
-	git -C /home/moslime/moslime/ pull
+        cp /home/moslime/moslime/moslime.json /home/moslime/
+	sudo git -C /home/moslime/moslime/ reset --hard
+ 	sudo git -C /home/moslime/moslime/ pull
+        cp /home/moslime/moslime.json /home/moslime/moslime
         cp /home/moslime/moslime/scripts/raspi/* /home/moslime/
 	/home/moslime/autoupdate.sh
 	whiptail --msgbox "When you press enter, the raspberry pi will reboot. Just ssh back in however you did it in the first place once the Pi seems to be done booting." 20 78
@@ -36,8 +39,10 @@ function main_dialog {
 	case $CHOICE in
 		"1)")
 			whiptail --msgbox "When you press enter, you'll have 10 seconds to turn on all your trackers.\nAfter turning them on, make sure you lay them on a flat surface and do not touch them until MoSlime say's it's safe." 20 78
-			cp /home/moslime/moslime/moslime.json /home/moslime
-			python3 /home/moslime/moslime/moslime.py
+			sudo cp /home/moslime/moslime/moslime.json /home/moslime
+			sudo python3 /home/moslime/moslime/moslime.py
+   			sudo cp /home/moslime/moslime.json /home/moslime/moslime/moslime.json
+      			sudo rm /home/moslime/moslime.json
                         sleep 5
 			clear
 		;;
@@ -49,7 +54,7 @@ function main_dialog {
 
 		"3)")
 			whiptail --msgbox "Use the arrow keys to move the cursor around. When you've made your edits, press Ctrl-X, Y, then enter." 20 78
-			nano /home/moslime/moslime/moslime.json
+			sudo nano /home/moslime/moslime/moslime.json
 			clear
 		;;
 
