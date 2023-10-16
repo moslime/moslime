@@ -14,7 +14,7 @@ This software does not modify the firmware of your Mocopi trackers and should no
 Windows is currently not supported because of an issue with how it handles pairing and how the trackers present themselves.
 
 <details>
-  <summary>TL;DR: Bluetooth devices are supposed to have a unique key that identifies a device in the event that it's MAC address changes. All Mocopi trackers have the same key and that Windows does not like that.</summary>
+  <summary>TL;DR: Bluetooth devices are supposed to have a unique key that identifies a device in the event that it's MAC address changes. All Mocopi trackers have the same key and Windows does not like that.</summary>
  
   - As part of the pairing process, Bluetooth LE devices exchange a few keys that help them identify each other and secure their connection. One of these keys is the Identity Resolving Key, which is a 128 bit key that helps devices identify each other in the event that one or the other changes their MAC address (MAC Randomization is a privacy feature of BLE). This key is supposed to be unique per device but with Mocopi, it's hardcoded to be all zeros on all trackers. Platforms such as Linux, Android, iOS, etc. don't really care about the key being the same but Windows enforces use of that key and complains when multiple devices have the same key. Here's the error that Windows gives:
 
