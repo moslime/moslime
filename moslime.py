@@ -162,7 +162,7 @@ def connectTracker(mac_addr, tId, retry):
             continue
         break
 
-def correctAccel(aX, aY, aZ): # Used to correct accel data from tracker (dividing the tracker data by .12 makes it match the standard m/s^2)
+def correctAccel(aX, aY, aZ): # Used to correct accel data from tracker (multiplying the tracker data by .12 makes it match the standard m/s^2)
     aX2 = aX * .12
     aY2 = aY * .12
     aZ2 = aZ * .12
