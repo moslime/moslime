@@ -193,7 +193,7 @@ class NotificationHandler(btle.DefaultDelegate): #takes in tracker data, applies
                 ay = hexToFloat(data[28:30])
                 if self.ignorePackets == 0:
                     # Once a number of packets have been discarded, we calculate the offset needed to make SlimeVR happy
-                    self.offset = multiply(pw, -px, -py, -pz, 1, 0, 0, 0)
+                    self.offset = (pw, -px, -py, -pz)
                     self.ignorePackets += 1
                     self.lastCounter = int.from_bytes(data[1:8], "little")
                     return
