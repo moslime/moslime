@@ -9,7 +9,7 @@ import threading
 import os
 
 ref_config = {  # Reference config, used when moslime.json is missing
-    "addresses": ["3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX", "3C:38:F4:XX:XX:XX"],
+    "addresses": ["3C:38:F4:XX:XX:XX"] * 6,
     "autodiscovery": True,
     "slime_ip": "127.0.0.1",
     "slime_port": 6969,
