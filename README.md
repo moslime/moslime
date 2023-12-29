@@ -45,8 +45,8 @@ With MoSlime, the trackers can be placed and assigned to any body part you want.
 
 ## Tested Bluetooth adapters
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
+ - [tp-link UB500](https://www.tp-link.com/us/home-networking/usb-adapter/ub500/)
  - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit, it may be a good idea to lower the TPS in moslime.json)
- - ~~[SENA UD100](http://www.senanetworks.com/ud100-g03.html)~~ - Keeps causing issues for users, your mileage may vary.
 
 ## Contributors
  - [@lmore377](https://github.com/lmore377) - Original Bluetooth reverse-engineering work, Python code, quaternion correction math
