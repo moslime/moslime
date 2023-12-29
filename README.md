@@ -31,26 +31,17 @@ Windows is currently not supported because of an issue with how it handles pairi
 - [x] Send IMU acceleration data to SlimeVR (Doesn't help with drift currently, only allows for gesture controls)
 - [ ] UI to allow easy configuration
 
-## Premade Raspberry Pi Image
-We have an experimental Raspberry Pi image meant to make running MoSlime easier. More info here: https://github.com/lmore377/moslime/blob/main/setup/raspi.md
-
-## Requirements
- - Any VM or bare-metal Linux system with Bluetooth and BlueZ as the Bluetooth stack. This system can be seperate from the system that is running SlimeVR.
- - Python 3 with bluepy installed `pip3 install bluepy`
+## Requirements and Setup
+Setup and usage instructions can be found in the [Wiki](https://github.com/moslime/moslime/wiki)
 
 ## Tracker Mounting
-With MoSlime, the trackers can be placed and assigned to any body part you want. Assuming you're using moslime alongside a VR headset, here are the recommended tracker positions:
- - Head   - Place on your chest. For most people, the head strap should be big enough to strech over your chest.
+With MoSlime, the trackers can be placed and assigned to any body part you want. Assuming you're using MoSlime alongside a VR headset, here are the recommended tracker positions:
+ - Head   - Place on your chest. For some people, the head strap should be big enough to strech over your chest.
  - Hip    - Should still be used for hip
  - Wrists - Use these for your upper legs/knees. You may need to make some custom straps for these (you can use the original mount, just take the 2 screws off the back)
  - Ankles - Should still be used for ankles
 
-## Setup
-MoSlime can run on any linux distribution as long as you have BlueZ, Python 3 and bluepy installed. Below are some guides for common distros:
- - Ubuntu / Debian - [debian.md](setup/debian.md)
-
-## Note
-If you somehow accidentally close SlimeVR, you'll need to close MoSlime and follow the Usage section again. (make sure you turn the trackers off and restart bluetooth)
+   - If you're lucky, you might be able to strech the wrist straps around your ankles and your ankle straps around your knees
 
 ## Tested Bluetooth adapters
  - [Intel 8265NGW - Combo WiFi/BT card](https://www.intel.com/content/www/us/en/products/sku/94150/intel-dual-band-wirelessac-8265/specifications.html)
