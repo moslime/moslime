@@ -48,6 +48,10 @@ With MoSlime, the trackers can be placed and assigned to any body part you want.
  - [tp-link UB500](https://www.tp-link.com/us/home-networking/usb-adapter/ub500/)
  - Raspberry Pi 3B/3B+/4B (3B and 3B+ struggle a bit, it may be a good idea to lower the TPS in moslime.json)
 
+## Known Problematic Bluetooth Adapters
+- Intel 18260NGW - unusable when more than one tracker is connected
+- SENA UD100 - has issues connecting to more than 4 trackers
+
 ## Contributors
  - [@lmore377](https://github.com/lmore377) - Original Bluetooth reverse-engineering work, Python code, quaternion correction math
  - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Slime packet generation code, Rust code, wip web interface, graphics, moral support
