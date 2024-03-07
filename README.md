@@ -11,7 +11,8 @@ Mocopi is a trademark owned by the Sony Corporation. MoSlime is not endorsed by 
 This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Note about Windows support
-**We have found a workaround and Windows support will be coming soon.**
+**We have found a workaround and Windows support will be coming soon.**\
+It involves bypassing the Windows bluetooth stack entirely and switching from bluepy to [Bumble](https://github.com/google/bumble/)
 
 Windows is currently not supported because of an issue with how it handles pairing and how the trackers present themselves.
 <details>
