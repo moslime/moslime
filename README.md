@@ -24,11 +24,11 @@ Windows is currently not supported because of an issue with how it handles pairi
 ## Current and Planned Features
 - [x] Auto-connect to trackers (manual pairing still needed) 
 - [x] Send IMU rotation data to SlimeVR
-- [x] Prebuilt Raspberry Pi image for easier use
 - [x] Auto discovery and paring of trackers (Partially complete)
 - [x] Auto reconnect when trackers disconnect
 - [x] SlimeVR Server auto discovery
 - [x] Send IMU acceleration data to SlimeVR (Doesn't help with drift currently, only allows for gesture controls)
+- [x] Battery and Firmware verion reporting
 - [ ] UI to allow easy configuration
 
 ## Requirements and Setup
