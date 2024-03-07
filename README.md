@@ -11,8 +11,9 @@ Mocopi is a trademark owned by the Sony Corporation. MoSlime is not endorsed by 
 This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Note about Windows support
-Windows is currently not supported because of an issue with how it handles pairing and how the trackers present themselves.
+**We have found a workaround and Windows support will be coming soon.**
 
+Windows is currently not supported because of an issue with how it handles pairing and how the trackers present themselves.
 <details>
   <summary>TL;DR: Bluetooth devices are supposed to have a unique key that identifies a device in the event that it's MAC address changes. All Mocopi trackers have the same key and Windows does not like that.</summary>
  
