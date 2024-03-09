@@ -59,6 +59,8 @@ With MoSlime, the trackers can be placed and assigned to any body part you want.
  - [@PlatinumVsReality](https://github.com/PlatinumVsReality) - Slime packet generation code, Rust code, wip web interface, graphics, moral support
  - [@itstait](https://github.com/itstait) - Helped optimize multithreading (trust me it used to be much worse)
 
+Special thanks to the SlimeVR team for making their amazing software in the first place and for answering our endless questions!
+
 ## Resources
  - https://github.com/lmore377/mocopi-reverse-engineering - Initial reverse engineering work
  - https://github.com/SlimeVR/SlimeVR-Tracker-ESP - Used to figure out networking / packet structure
