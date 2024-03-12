@@ -5,6 +5,7 @@ import threading
 import moslime_common as mc
 import socket
 import os
+import traceback
 
 CMD_UUID = "0000ff00-0000-1000-8000-00805f9b34fb"  # BLE UUID to send commands to
 
@@ -27,10 +28,10 @@ class trackerHandler:
             try:
                 print("Connecting to MAC: " + str(self.trackerMac))
                 self.puck = btle.Peripheral(self.trackerMac)
-                self.puck.setDelegate(NotificationHandler(self.trackerMac, self.sock, self.pcounter))
                 self.puck.setMTU(40)
                 self.puckCMD = self.puck.getServiceByUUID(CMD_UUID).getCharacteristics()[1]
                 self.puckName = self.puck.readCharacteristic(0x0003).decode("utf-8")
+                self.puck.setDelegate(NotificationHandler(self.trackerMac, self.puckName, self.sock, self.pcounter))
                 print("Connected to tracker MAC: " + str(self.trackerMac) + " / " + self.puckName)
                 time.sleep(2)
                 self.puckCMD.write(bytearray(b"\x7e\x03\x18\xd6\x01\x00\x00"), True)
@@ -90,7 +91,7 @@ class NotificationHandler(btle.DefaultDelegate):
     global SLIME_PORT
     global TRACKER_ADDRESSES
 
-    def __init__(self, tMAC, inSock: socket, pcounter):
+    def __init__(self, tMAC, pName, inSock: socket, pcounter):
         btle.DefaultDelegate.__init__(self)
         self.tIndex = TRACKER_ADDRESSES.index(tMAC)
         self.trakID = tMAC
@@ -99,6 +100,7 @@ class NotificationHandler(btle.DefaultDelegate):
         self.lastCounter = 0
         self.sock = inSock
         self.pcounter = pcounter
+        self.puckName = pName
 
     def handleNotification(self, svc, data):
         if svc == 73: # IMU data service
@@ -117,7 +119,7 @@ class NotificationHandler(btle.DefaultDelegate):
                 elif self.ignorePackets < 0:
                     self.ignorePackets += 1
                     return
-                
+
                 out = mc.process_packet(data, self.offset)
 
                 # Data packets from Mocopi trackers have a counter that increments by 78125 with every
@@ -125,7 +127,7 @@ class NotificationHandler(btle.DefaultDelegate):
                 #
                 if (out.counter - self.lastCounter) != 78125:
                     a = int((out.counter - self.lastCounter) / 78125)
-                    print(str(a) + " packet(s) dropped on tracker " + str(self.trackerMac) + " / " + self.puckName)
+                    print(str(a) + " packet(s) dropped on tracker " + str(self.trakID) + " / " + self.puckName)
                 self.lastCounter = out.counter
 
                 # Build and send rotation and acceleration packets
@@ -135,7 +137,7 @@ class NotificationHandler(btle.DefaultDelegate):
                 accel = mc.build_accel_packet(out.ax, out.ay, out.az, self.pcounter)
                 self.pcounter += 1
                 self.sock.sendto(accel, (SLIME_IP, SLIME_PORT))
-                
+
             except Exception as e:
                 if "unpack requires a buffer of 2 bytes" in str(e):
                     print("Following exception can be ignored:")
@@ -200,6 +202,6 @@ print("All trackers are connected\n")
 try:
     while True:
         time.sleep(999999999)
-        
+
 except KeyboardInterrupt:
     print("\nQuitting...")
