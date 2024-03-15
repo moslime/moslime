@@ -96,7 +96,7 @@ class NotificationHandler(btle.DefaultDelegate):
         self.tIndex = TRACKER_ADDRESSES.index(tMAC)
         self.trakID = tMAC
         self.ignorePackets = -40
-        self.offset = (0, 0, 0, 0)
+        self.offset = (0.707, 0.707, 0, 0)
         self.lastCounter = 0
         self.sock = inSock
         self.pcounter = pcounter
@@ -108,11 +108,7 @@ class NotificationHandler(btle.DefaultDelegate):
                 # ignorePackets - We ignore a set number of packets to account for some quaternion funkiness
                 # that comes from the trackers when starting 
                 #
-                # offset - The quaternion from the pucks is somewhat different from what SlimeVR expects
-                # so we need to do an initial calibration to make everything happy  
-                # 
                 if self.ignorePackets == 0:
-                    self.offset = mc.process_packet(data, calibrate=True) 
                     out = mc.process_packet(data, self.offset)
                     self.lastCounter = int(out.counter) - 78125
                     self.ignorePackets += 1
