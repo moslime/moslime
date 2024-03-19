@@ -1,7 +1,6 @@
 import struct
 from collections import namedtuple
 import socket
-import binascii
 import json
 import time
 
@@ -79,7 +78,7 @@ def find_slime():
                 time.sleep(.25)
                 attempts += 1
                 if not found and attempts > 5:
-                    print("Failed to find SlimeVR. Try restarting SlimeVR then MoSlime. If issues still persist, disable autodiscovery and put your IP address in moslime.json")
+                    print("Failed to find SlimeVR. Try restarting SlimeVR then MoSlime, specifically in that order. If issues still persist, disable autodiscovery and put your IP address in moslime.json")
                     quit()
     except SystemExit:
         quit()
@@ -133,7 +132,7 @@ def build_handshake(mac, fw, pcounter):
     buffer += struct.pack('>I', int(fw.replace('.', '')))  # Build
     buffer += struct.pack('B', len(fw_string))  # length of fw string
     buffer += struct.pack(str(len(fw_string)) + 's', fw_string.encode('UTF-8'))  # fw string
-    buffer += struct.pack('6s', binascii.unhexlify(mac.replace(':', '')))  # MAC address
+    buffer += struct.pack('6s', bytes.fromhex(mac.replace(':', '')))  # MAC address
     buffer += struct.pack('B', 255)
     return buffer
 

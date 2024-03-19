@@ -192,7 +192,7 @@ for index, mac in enumerate(TRACKER_ADDRESSES):
 
 allReady.set()
 time.sleep(2)
-print("All trackers are connected\n")
+print("All trackers are connected. You can ignore packet drops above this line.\n")
 
 # Keep main alive until Ctrl + C
 try:
