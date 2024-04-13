@@ -94,10 +94,7 @@ def create_sock():
     sock.bind(("0.0.0.0", 0))
     sock.settimeout(3)
     return sock
-
-def interp(val_in):  # mocopi sends quat as a signed int from -8192to8192 but quats are -1to1. this scales down the mocopi data
-    return (((val_in - -8192) * (1 - -1)) / (8192 - -8192)) + -1
-
+    
 def calc_batt(val_in):
     a = int.from_bytes(val_in[7:11], "big")
     percent = (a - 67410) / 6501390
@@ -105,13 +102,10 @@ def calc_batt(val_in):
     return voltage, percent
 
 def hexToQuat(bytes):
-    return interp(int.from_bytes(bytes, byteorder='little', signed=True))
+    return int.from_bytes(bytes, byteorder='little', signed=True) / 8192
 
 def hexToFloat(bytes):
     return struct.unpack('<e', bytes)[0]
-
-def hexToBat(bytes):
-    return struct.unpack('f', bytes)[0]
 
 def multiply(w1, x1, y1, z1, w2, x2, y2, z2):  # multiply a quat by another
     w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
@@ -154,7 +148,6 @@ def build_rotation_packet(
     buffer += struct.pack('>ffff', -qx, qz, qy, qw)  # quaternion as x,z,y,w
     buffer += struct.pack('B', 0)  # calibration info (seems to not be used by SlimeVR currently)
     return buffer
-
 
 def build_accel_packet(ax, ay, az, pcounter):
     buffer = b'\x00\x00\x00\x04'  # packet 4 header
