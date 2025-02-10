@@ -11,17 +11,10 @@ Mocopi is a trademark owned by the Sony Corporation. MoSlime is not endorsed by 
 This software does not modify the firmware of your Mocopi trackers and should not break them. However, only use this software if you agree to assume the risks therein.
 
 ## Note about Windows support
-**We have found a workaround and Windows support will be coming soon.**\
-It involves bypassing the Windows bluetooth stack entirely and switching from bluepy to [Bumble](https://github.com/google/bumble/)
+Update: Sony has fixed the issue with the Mocopi firmware and MoSlime can now work on Windows. We are currently working on a rewrite that will support even more devices
+but in the meantime you can use this rewrite: https://booth.pm/en/items/6524059
 
-Windows is currently not supported because of an issue with how it handles pairing and how the trackers present themselves.
-<details>
-  <summary>TL;DR: Bluetooth devices are supposed to have a unique key that identifies a device in the event that it's MAC address changes. All Mocopi trackers have the same key and Windows does not like that.</summary>
- 
-  - As part of the pairing process, Bluetooth LE devices exchange a few keys that help them identify each other and secure their connection. One of these keys is the Identity Resolving Key, which is a 128 bit key that helps devices identify each other in the event that one or the other changes their MAC address (MAC Randomization is a privacy feature of BLE). This key is supposed to be unique per device but with Mocopi, it's hardcoded to be all zeros on all trackers. Platforms such as Linux, Android, iOS, etc. don't really care about the key being the same but Windows enforces use of that key and complains when multiple devices have the same key. Here's the error that Windows gives:
-
-   `The device (3c:38:f4:xx:xx:xx) is trying to distribute an Identity Resolving Key that is already used by a paired device. The pairing was rejected, if the intent was to pair with this device, you may need to first delete the existing pairing information.`
-</details>
+In order to use it, you must update the firmware on your trackers to the latest version using the Mocopi app. We are looking into providing firmware updates without having to use a phone.
 
 ## Current and Planned Features
 - [x] Auto-connect to trackers (manual pairing still needed) 
