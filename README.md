@@ -15,6 +15,7 @@ Update: Sony has fixed the issue with the Mocopi firmware and MoSlime can now wo
 but in the meantime you can use this rewrite: https://booth.pm/en/items/6524059
 
 In order to use it, you must update the firmware on your trackers to the latest version using the Mocopi app. We are looking into providing firmware updates without having to use a phone.
+If you'd like to look into this yourself, you can find the firmware in the Mocopi APK (it ends with a `.img` extension) and it can be flashed with this: https://play.google.com/store/apps/details?id=com.dialog.suota
 
 ## Current and Planned Features
 - [x] Auto-connect to trackers (manual pairing still needed) 
