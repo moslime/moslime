@@ -27,7 +27,7 @@ Leave all the flash/pin settings as their default. Modifying them might permanen
 - [x] Auto reconnect when trackers disconnect
 - [x] SlimeVR Server auto discovery
 - [x] Send IMU acceleration data to SlimeVR (Doesn't help with drift currently, only allows for gesture controls)
-- [x] Battery and Firmware verion reporting
+- [x] Battery and Firmware version reporting
 - [ ] UI to allow easy configuration
 
 ## Requirements and Setup
